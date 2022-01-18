@@ -1,0 +1,288 @@
+ABAP
+    filter remove_matches ^\*
+    extension abap
+    extension ab4
+    extension flow
+    3rd_gen_scale 5.00
+Apex
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension cls
+    extension trigger
+    3rd_gen_scale 1.50
+C
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension c
+    extension C
+    3rd_gen_scale 0.77
+    end_of_line_continuation \\$
+C#
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension cs
+    3rd_gen_scale 1.36
+    end_of_line_continuation \\$
+C++
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension cpp
+    extension CPP
+    extension cc
+    extension cxx
+    extension c++
+    3rd_gen_scale 1.51
+    end_of_line_continuation \\$
+C/C++ Header
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension H
+    extension h
+    extension hh
+    extension hpp
+    extension hxx
+    extension h++
+    extension ipp
+    3rd_gen_scale 1.00
+    end_of_line_continuation \\$
+COBOL
+    filter remove_cobol_comments
+    extension CBL
+    extension COB
+    extension cbl
+    extension ccp
+    extension cob
+    extension cobol
+    extension cpy
+    3rd_gen_scale 1.04
+CSS
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C
+    extension css
+    3rd_gen_scale 1.00
+Flex
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension as
+    3rd_gen_scale 1.36
+    end_of_line_continuation \\$
+Go
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension go
+    3rd_gen_scale 2.50
+    end_of_line_continuation \\$
+HTML
+    filter remove_html_comments
+    filter call_regexp_common HTML
+    extension htm
+    extension html
+    extension cshtml
+    extension vbhtml
+    extension aspx
+    extension ascx
+    extension rhtml
+    extension erb
+    extension shtm
+    extension shtml
+    extension cmp
+    3rd_gen_scale 1.90
+JSP
+    filter remove_html_comments
+    filter call_regexp_common HTML
+    filter remove_jsp_comments
+    filter remove_matches ^\s*//
+    filter add_newlines
+    filter call_regexp_common C
+    extension jsp
+    extension jspf
+    extension jspx
+    3rd_gen_scale 1.48
+Java
+    filter replace_regex \\$  
+    filter replace_between_regex (["'])(.*?/\*)\g1 (.*?) "xx"
+    filter replace_between_regex (["'])(.*?\*/)\g1 (.*?) "xx"
+    filter call_regexp_common C++
+    extension java
+    extension jav
+    3rd_gen_scale 1.36
+JavaScript
+    filter rm_comments_in_strings ' /* */
+    filter rm_comments_in_strings ' // 
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension js
+    extension jsx
+    extension mjs
+    3rd_gen_scale 1.48
+    end_of_line_continuation \\$
+Kotlin
+    filter rm_comments_in_strings """ /* */ 1
+    filter rm_comments_in_strings """ //  1
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension kt
+    3rd_gen_scale 2.00
+LESS
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension less
+    3rd_gen_scale 1.50
+    end_of_line_continuation \\$
+Objective-C
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension m
+    3rd_gen_scale 2.96
+    end_of_line_continuation \\$
+Oracle PL/SQL
+    filter call_regexp_common PL/SQL
+    extension tag
+    extension pkb
+    3rd_gen_scale 2.58
+PHP
+    filter remove_matches ^\s*#
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    filter remove_inline #.*$
+    extension php
+    extension php3
+    extension php4
+    extension php5
+    extension phtml
+    extension inc
+    script_exe php
+    script_exe php5
+    3rd_gen_scale 3.50
+PL/I
+    filter call_regexp_common C
+    extension pl1
+    3rd_gen_scale 1.38
+Python
+    filter remove_matches /\*
+    filter remove_matches \*/
+    filter remove_matches ^\s*#
+    filter docstring_to_C
+    filter call_regexp_common C
+    filter remove_inline #.*$
+    extension py
+    script_exe python
+    script_exe python2.6
+    script_exe python2.7
+    script_exe python3
+    script_exe python3.3
+    script_exe python3.4
+    script_exe python3.5
+    script_exe python3.6
+    script_exe python3.7
+    script_exe python3.8
+    3rd_gen_scale 4.20
+    end_of_line_continuation \\$
+RPG
+    filter call_regexp_common C
+    extension rpg
+    3rd_gen_scale 1.38
+Ruby
+    filter remove_matches ^\s*#
+    filter remove_below_above ^=begin ^=end
+    filter remove_inline #.*$
+    extension rb
+    filename Rakefile
+    filename rakefile
+    script_exe ruby
+    3rd_gen_scale 4.20
+    end_of_line_continuation \\$
+SCSS
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension scss
+    3rd_gen_scale 1.50
+SQL
+    filter call_regexp_common C
+    filter remove_matches ^\s*--
+    filter remove_inline --.*$
+    extension SQL
+    extension sql
+    3rd_gen_scale 2.29
+Scala
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension scala
+    3rd_gen_scale 4.10
+Swift
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension swift
+    3rd_gen_scale 2.50
+    end_of_line_continuation \\$
+Terraform
+    filter call_regexp_common C
+    extension tf
+    3rd_gen_scale 1.00
+T-SQL
+    filter call_regexp_common C
+    filter remove_matches ^\s*--
+    filter remove_inline --.*$
+    extension tsql
+    3rd_gen_scale 2.29
+TypeScript
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension ts
+    extension tsx
+    3rd_gen_scale 2.00
+    end_of_line_continuation \\$
+Visual Basic .NET
+    filter remove_above ^\s*Attribute\s+VB_Name\s+=
+    filter remove_matches ^\s*Attribute\s+
+    filter remove_matches ^\s*\47
+    extension VB
+    extension vb
+    3rd_gen_scale 2.76
+Vuejs Component
+    filter remove_html_comments
+    filter call_regexp_common HTML
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    extension vue
+    3rd_gen_scale 2.00
+XHTML
+    filter remove_html_comments
+    filter call_regexp_common HTML
+    extension xhtml
+    3rd_gen_scale 1.90
+XML
+    filter remove_html_comments
+    filter call_regexp_common HTML
+    extension XML
+    extension xml
+    extension XSD
+    extension xsd
+    extension XSL
+    extension xsl
+    3rd_gen_scale 1.90
+YAML
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension yaml
+    extension yml
+    3rd_gen_scale 0.90
