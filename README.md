@@ -28,6 +28,7 @@ Counts lines of code from a GitHub.com organization.  Requires to pass username,
 
 ```
 <github_com.sh> myuser 1234567890abcdefgh myGitHubDotComOrg
+```
 
 [bitbucket.org](https://bitbucket.org):
 
@@ -35,3 +36,4 @@ Counts lines of code from a GitHBitbucket.org organization. Requires to pass use
 
 ```
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace
+```
