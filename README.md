@@ -19,7 +19,7 @@ Requirements:
 General usage
 -------------
 
-All scripts require to pass username, personal access token and the API endpoint URL.
+All scripts will produce two reports of LoC by language (.lang) and by repository (.file).
 
 [github.com](https://github.com):
 

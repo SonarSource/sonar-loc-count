@@ -39,7 +39,7 @@ done
 
 echo "Building final report:"
 
-cloc --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=TOTALS $fileList
+cloc --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=$org $fileList
 rm *.cloc
 
 exit 0;
