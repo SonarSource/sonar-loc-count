@@ -1,6 +1,6 @@
 LoC Counting Scripts
 ==================
-This is a collection of shell scripts to count lines of code of all repositories accessible by the user.
+This is a collection of shell scripts to count lines of code from repositories and local directories.
 
 * [Installation](#installation)
 * [General usage](#general-usage)
@@ -22,7 +22,16 @@ General usage
 
 All scripts require to pass username, personal access token and the API endpoint URL.
 
-Example for public [github.com](https://github.com):
+[github.com](https://github.com):
+
+Counts lines of code from a GitHub.com organization.  Requires to pass username, personal access token and the organization.  The token must have repo scope.
 
 ```
 <github_com.sh> myuser 1234567890abcdefgh myGitHubDotComOrg
+
+[bitbucket.org](https://bitbucket.org):
+
+Counts lines of code from a GitHBitbucket.org organization. Requires to pass username, personal access token and the workspace.  The token must have repo scope.
+
+```
+<bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace
