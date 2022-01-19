@@ -11,7 +11,6 @@ Installation
 Requirements:
 
 * bash version 4+
-* [Perl](https://www.perl.org/)
 * [Git](https://git-scm.com/)
 * [curl](https://curl.haxx.se)
 * [jq](https://stedolan.github.io/jq/)
@@ -32,7 +31,7 @@ Counts lines of code from a GitHub.com organization.  Requires to pass username,
 
 [bitbucket.org](https://bitbucket.org):
 
-Counts lines of code from a GitHBitbucket.org organization. Requires to pass username, personal access token and the workspace.  The token must have repo scope.
+Counts lines of code from a Bitbucket.org organization. Requires to pass username, app password and the workspace slug.  The token must have Repositories > Read permissions.
 
 ```
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace
