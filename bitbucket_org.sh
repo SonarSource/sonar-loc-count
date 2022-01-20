@@ -2,7 +2,7 @@
 # Count LoC for Bitbucket workspace
 
 if [ $# -lt 3 ]; then
-    echo "Usage: `basename $0` <user>:<token> <github-api-url> <org>"
+    echo "Usage: `basename $0` <user> <token> <workspace>"
     exit
 fi
 

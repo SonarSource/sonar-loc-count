@@ -2,7 +2,7 @@
 # Count LoC for GitHub repos/organizations
 
 if [ $# -lt 3 ]; then
-    echo "Usage: `basename $0` <user>:<token> <github-api-url> <org>"
+    echo "Usage: `basename $0` <user> <token> <org>"
     exit
 fi
 
