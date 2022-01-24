@@ -44,3 +44,11 @@ Counts lines of code from a Azure DevOps Services organization. Requires to pass
 ```
 <azure_devops_services.sh> 1234567890abcdefgh myADOOrg
 ```
+
+Local Filesystem:
+
+Counts lines of code from a local directory or file.  This script only produces the LoC by language (.lang)
+
+```
+<azure_devops_services.sh> 1234567890abcdefgh myADOOrg
+```
