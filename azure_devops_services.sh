@@ -1,17 +1,16 @@
 #!/bin/bash
 # Count LoC for a Azure DevOps organization
 
-if [ $# -lt 3 ]; then
-    echo "Usage: `basename $0` <user> <token> <org>"
+if [ $# -lt 2 ]; then
+    echo "Usage: `basename $0` <token> <org>"
     exit
 fi
 
 apiBase=https://dev.azure.com/
-user=$1
-token=$2
-org=$3
+token=$1
+org=$2
 
-reposJson=$(curl -f -s -u "$user:$token" $apiBase$org/_apis/git/repositories?api-version=6.0)
+reposJson=$(curl -f -s -u ":$token" $apiBase$org/_apis/git/repositories?api-version=6.0)
 
 echo $reposJson
 readarray -t repos < <(jq -c '.value[] | {name: .name, project: .project.id, default_branch: .defaultBranch}' <<< $reposJson)
