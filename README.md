@@ -19,7 +19,7 @@ Requirements:
 General usage
 -------------
 
-All scripts will produce two reports of LoC by language (.lang) and by repository (.file).
+Most scripts will produce two reports of LoC by language (.lang) and by repository (.file).
 
 [github.com](https://github.com):
 
@@ -50,5 +50,5 @@ Local Filesystem:
 Counts lines of code from a local directory or file.  This script only produces the LoC by language (.lang)
 
 ```
-<azure_devops_services.sh> 1234567890abcdefgh myADOOrg
+<filesystem.sh> PathToDirectoryorFile
 ```
