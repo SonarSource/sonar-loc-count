@@ -36,3 +36,11 @@ Counts lines of code from a Bitbucket.org organization. Requires to pass usernam
 ```
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace
 ```
+
+[Azure DevOps Services](https://dev.azure.com):
+
+Counts lines of code from a Azure DevOps Services organization. Requires to pass username, personal access token and the organization.  The token must have Code > Read permissions.
+
+```
+<azure_devops_services.sh> myuser@mycompany.com 1234567890abcdefgh myADOOrg
+```
