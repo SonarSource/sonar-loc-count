@@ -1,9 +1,11 @@
 LoC Counting Scripts
 ==================
 This is a collection of shell scripts to count lines of code from repositories and local directories.
+Those scritps can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
 
 * [Installation](#installation)
 * [General usage](#general-usage)
+* [Contributions and Feedbacks](#Contributions-and-feedbacks)
 
 Installation
 ------------
@@ -52,3 +54,7 @@ Counts lines of code from a local directory or file.  This script only produces 
 ```
 <filesystem.sh> PathToDirectoryorFile
 ```
+
+Contributions and feedbacks
+-------------
+Contributions and feedbacks are welcome, as PRs or issues directly with this repository, or through your established Sonar communication channels.
