@@ -1,6 +1,6 @@
 LoC Counting Scripts
 ==================
-This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.  These scritps can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
+This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.  These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
 
 * [Installation](#installation)
 * [General usage](#general-usage)
