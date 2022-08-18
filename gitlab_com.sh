@@ -26,16 +26,16 @@ while [ "$URL" ]; do
     curl -i -v -u "$user:$token" "$URL"
     exit 2
   fi
-  HEADERS=$(echo "$RESP" | gsed '/^\r$/q')
-  URL=$(echo "$HEADERS" | gsed -n -E 's/link:.*<(.*?)>; rel="next".*/\1/p')
+  HEADERS=$(echo "$RESP" | sed '/^\r$/q')
+  URL=$(echo "$HEADERS" | sed -n -E 's/link:.*<(.*?)>; rel="next".*/\1/p')
   if [ $? -ne 0 ]; then
     echo "######################"
     echo "Error with extracting next page link from headers:$HEADERS"
-    echo "MacOS users need to switch to a standard gsed implementation, e.g., gnu-gsed"
+    echo "MacOS users need to switch to a standard sed implementation, e.g., gnu-sed"
     echo "######################"
     exit 3
   fi
-  reposJson="$reposJson $(echo "$RESP" | gsed '1,/^\r$/d')"
+  reposJson="$reposJson $(echo "$RESP" | sed '1,/^\r$/d')"
 done
 
 readarray -t repos < <(jq -c '.[] | {name: .name, full_name: .full_name, default_branch: .default_branch}' <<< $reposJson)
