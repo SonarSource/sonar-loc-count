@@ -51,7 +51,7 @@ Counts lines of code from a Azure DevOps Services organization. Requires to pass
 Counts lines of code from a GitLab.com Group. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.
 
 ```
-<gitlab_com.sh> 1234567890abcdefgh myGitLabGroup
+<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupID
 ```
 
 Local Filesystem:
