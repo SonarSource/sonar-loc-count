@@ -78,7 +78,7 @@ done
 # Combine reports
 echo "Building final report:"
 
-cloc --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=$group $fileList
+cloc --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=$groupName $fileList
 rm *.cloc
 
 exit 0;
