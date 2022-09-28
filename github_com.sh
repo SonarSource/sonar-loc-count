@@ -53,14 +53,11 @@ for repo in "${repos[@]}"; do
     echo $name  - $branch    
 done
 
-fileList=""
-
 for repo in "${repos[@]}"; do
     full_name=$(jq -r '.full_name' <<< $repo)
     name=$(jq -r '.name' <<< $repo)
     branch=$(jq -r '.default_branch' <<< $repo)
     remoteUrl=https://$user:$token@github.com/$full_name.git
-    fileList+="$name.cloc "
     echo Checking out $full_name - $branch
     git clone $remoteUrl --depth 1 --branch $branch $name
     echo Counting $full_name - $branch
@@ -71,6 +68,13 @@ done
 echo "Building final report:"
 
 cloc --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=$org *.cloc
+if [ $? -ne 0 ]; then
+    echo "######################"
+    echo "cloc reports sum failed"
+    echo "exiting without cloc output cleanup (*.cloc files preserved) so that you may not need to restart from scratch"
+    echo "######################"
+    exit 5
+fi
 rm *.cloc
 
 exit 0;
