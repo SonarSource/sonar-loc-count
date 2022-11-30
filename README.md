@@ -1,3 +1,5 @@
+![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+
 LoC Counting Scripts
 ==================
 This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.  These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
