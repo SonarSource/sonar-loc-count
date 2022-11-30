@@ -33,7 +33,10 @@ else {
       # Set API URL to Get Repositories
       $ProjectUrl = "https://dev.azure.com/${organization}/_apis/git/repositories?api-version=6.1-preview.1" 
       # Get List of Repositories
-      $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
+       try {
+        $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Verbose -ErrorAction Stop)
+       }
+       catch { Write-Error -Message $_} 
       # Get Number of Repositories
       $NumberRepositories=$Repo.value.count
 
@@ -47,7 +50,10 @@ else {
         $ProjetBranchUrl="https://dev.azure.com/${organization}/${RepoName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
         Write-Host  $ProjetBranchUrl
         # Get List of Branches
-        $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
+        try {
+         $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Verbose -ErrorAction Stop)
+        }
+        catch { Write-Error -Message $_} 
         # Get Number of Branches
         $NumberBranch=$Branch.value.count
       
