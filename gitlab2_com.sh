@@ -30,7 +30,9 @@ BaseAPI="https://gitlab.com/api/v4"
 LISTF=""
 LIST=""
 i=1
-SED="gsed"
+
+# set command : sed for Mac Osx install gnu-sed : brew install gnu-sed and set SED=gsed
+SED="sed"
 
 # Get List of Repositories - List 
 curl -s -u $connectionToken: $BaseAPI/groups/$groupname | jq -r '.projects[] | "\(.name):\(.id)"' | while IFS=: read -r Name ID;
@@ -57,15 +59,12 @@ do
         gsed -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
 
     done   
-    # Combine reports
-    echo "Building final report for projet $NameFile : $NameFile.txt "
-    #for j in `ls -la *.cloc|awk '{print $9}'`; do cat $j >>  $NameFile.txt; done
-     echo "-----------------------------------------------------------------"
-  
-    ([ `printf *.cloc` != '*.cloc' ] || [ -f '*.txt' ]) &&  for j in `ls -la *.cloc|awk '{print $9}'`; do cat $j >>  $NameFile.txt; done &&  /bin/rm  *.cloc || echo ""
+    echo "-----------------------------------------------------------------"
+    
+     # Combine reports
+     echo "Building final report for projet $NameFile : $NameFile.txt "
+     ([ `printf *.cloc` != '*.cloc' ] || [ -f '*.txt' ]) &&  for j in `ls -la *.cloc|awk '{print $9}'`; do cat $j >>  $NameFile.txt; done &&  /bin/rm  *.cloc || echo ""
 
-
-    #/bin/rm  *.cloc
     LISTF=""
 
 done
