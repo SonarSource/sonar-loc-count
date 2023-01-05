@@ -6,7 +6,7 @@
 #  @package     :                                                          #
 #  @subpackage  : gitlab3                                                  #
 #  @access      :                                                          #
-#  @paramtype   : connectionToken,groupName or path_with_namespace         #
+#  @paramtype   : connectionToken,groupName or path_project                #
 #  @argument    :                                                          #
 #  @description : Get Number ligne of Code in GitLab DevOPS                #
 #  @usage : ./gitlab2_com.sh <token> <groupName>                           #                                                              
@@ -19,7 +19,7 @@
 
 
 if [ $# -lt 2 ]; then
-    echo "Usage: `basename $0` <token> <groupName> <root>"
+    echo "Usage: `basename $0` <token> <groupName> "
     exit
 fi
 
@@ -40,7 +40,7 @@ BaseAPI="https://gitlab.com/api/v4"
 
 # If you use mac osx you have to install the gnu-sed (brew install gnu-sed) then you set in the scripts the variable SED. SED=gsed
 # For linux SED=sed
-SED="gsed"
+SED="sed"
 i=1
 LISTF=""
 LIST=""
@@ -116,9 +116,9 @@ do
             MESSAGE02=`echo ${BRTAB2[${INDEX01}]}| $SED s/$SEA/''/g`
     fi      
 
-    echo -e "The maximum number of lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n"
+    echo -e "The maximum lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n"
     echo -e "\n---------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt
-    echo -e "\nThe maximum number of lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n" >> $NameFile.txt
+    echo -e "\nThe maximum lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n" >> $NameFile.txt
     echo -e "-----------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt 
 
     # set Nbr Loc by Project in File cpt.txt
@@ -140,9 +140,9 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-echo -e "The maximum number of lines of code for all projects is : < ${cpt} > result in <global.txt>\n"
+echo -e "The maximum lines of code on the repository is : < ${cpt} > result in <global.txt>\n"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
 echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-echo -e "The maximum number of lines of code for all projects is : < ${cpt} > result in <global.txt>\n" >> global.txt
+echo -e "The maximum lines of code on the repository : < ${cpt} > result in <global.txt>\n" >> global.txt
 echo -e "---------------------------------------------------------------------------------------------" >> global.txt
