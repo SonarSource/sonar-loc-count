@@ -144,5 +144,5 @@ echo -e "The maximum lines of code on the repository is : < ${cpt} > result in <
 echo -e "\n-------------------------------------------------------------------------------------------"
 
 echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-echo -e "The maximum lines of code on the repository : < ${cpt} > result in <global.txt>\n" >> global.txt
+echo -e "The maximum lines of code on the repository is : < ${cpt} > result in <global.txt>\n" >> global.txt
 echo -e "---------------------------------------------------------------------------------------------" >> global.txt
