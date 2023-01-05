@@ -18,6 +18,7 @@ Requirements:
 * [curl](https://curl.haxx.se)
 * [jq](https://stedolan.github.io/jq/)
 * [cloc](https://github.com/AlDanial/cloc)
+* For Mac OSX you need gnu-sed (brew install gnu-sed)
 
 General usage
 -------------
@@ -50,10 +51,14 @@ Counts lines of code from a Azure DevOps Services organization. Requires to pass
 
 [Gitlab.com](https://gitlab.com):
 
-Counts lines of code from a GitLab.com Group. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.
+Counts lines of code from a GitLab.com Group or Project. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.The script generates a report per project(File : <project>.txt) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a <global.txt> file that indicates the maximum line of code on the repository.
+
 
 ```
-<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupID
+<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupName
+```
+```
+<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupName/MyProject
 ```
 
 Local Filesystem:
