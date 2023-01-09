@@ -4,12 +4,12 @@
 #                                                                          #
 #  @project     : LoC Counting bash Scripts                                #
 #  @package     :                                                          #
-#  @subpackage  : gitlab3                                                  #
+#  @subpackage  : gitlab                                                   #
 #  @access      :                                                          #
 #  @paramtype   : connectionToken,groupName or path_project                #
 #  @argument    :                                                          #
 #  @description : Get Number ligne of Code in GitLab DevOPS                #
-#  @usage : ./gitlab2_com.sh <token> <groupName>                           #                                                              
+#  @usage : ./gitlab_com.sh <token> <groupName>                            #                                                              
 #                                                                          #
 #                                                                          #
 #  @author Emmanuel COLUSSI                                                #
