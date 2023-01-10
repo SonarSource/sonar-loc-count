@@ -66,7 +66,8 @@ do
   echo "-----------------------------------------------------------------"
   echo -e "Repository Number :$i  Name : $Name id : $ID"
 # Get List of Branches
-   #let "i=i+1"
+   
+   # Replace space by - in Repository name for created local file
    NameFile=` echo $Name|$SED s/' '/'-'/g`
 
    curl -s -u $connectionToken: $BaseAPI/projects/$ID/repository/branches | jq -r '.[].name' | while read -r BrancheName ;
@@ -116,10 +117,10 @@ do
             MESSAGE02=`echo ${BRTAB2[${INDEX01}]}| $SED s/$SEA/''/g`
     fi      
 
-    echo -e "The maximum lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n"
-    echo -e "\n---------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt
-    echo -e "\nThe maximum lines of code in the < $NameFile > project is : < ${MESSAGE01} > for the branch : < ${MESSAGE02} > \n" >> $NameFile.txt
-    echo -e "-----------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt 
+     printf "The maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}"
+     echo -e "\n---------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt
+     printf "\nThe maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}" >> $NameFile.txt
+     echo -e "-----------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt 
 
     # set Nbr Loc by Project in File cpt.txt
     echo "${INDEX01}" >> $NBCLOC
@@ -140,9 +141,9 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-echo -e "The maximum lines of code on the repository is : < ${cpt} > result in <global.txt>\n"
+printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
 echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-echo -e "The maximum lines of code on the repository is : < ${cpt} > result in <global.txt>\n" >> global.txt
+printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}" >> global.txt
 echo -e "---------------------------------------------------------------------------------------------" >> global.txt
