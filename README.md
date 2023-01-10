@@ -2,7 +2,7 @@
 
 LoC Counting Scripts
 ==================
-This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.  These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
+This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
 
 * [Installation](#installation)
 * [General usage](#general-usage)
@@ -38,10 +38,13 @@ Counts lines of code from a GitHub.com organization.  Requires to pass username,
 
 [bitbucket.org](https://bitbucket.org):
 
-Counts lines of code from a Bitbucket.org organization. Requires to pass username, [app password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug.  The token must have Repositories > Read permissions.
+Counts lines of code from a Bitbucket.org organization. Requires to pass username, [app password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug.  The token must have Repositories > Read permissions.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace
+```
+```
+<bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace MyProjectName
 ```
 
 [Azure DevOps Services](https://dev.azure.com):
