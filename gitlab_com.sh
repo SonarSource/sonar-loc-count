@@ -72,7 +72,10 @@ do
 
    curl -s -u $connectionToken: $BaseAPI/projects/$ID/repository/branches | jq -r '.[].name' | while read -r BrancheName ;
     do
-        LISTF="${NameFile}_${BrancheName}.cloc"
+        # Replace / or space by - in Branche Name for created local file
+        BrancheNameF=` echo $BrancheName|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
+        
+        LISTF="${NameFile}_${BrancheNameF}.cloc"
         echo -e "\n       Branche Name : $BrancheName\n"
 
         # Format Clone URL : cut <https://> string
