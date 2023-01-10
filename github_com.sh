@@ -6,7 +6,7 @@
 #  @package     :                                                          #
 #  @subpackage  : github                                                   #
 #  @access      :                                                          #
-#  @paramtype   : token,org ,reponame                                      #
+#  @paramtype   : user,token,org ,reponame                                 #
 #  @argument    :                                                          #
 #  @description : Get Number ligne of Code in GitHub DevOPS                #
 #  @usage : ./github_com.sh <token> <org> and optional <repoName>          #                                                              
@@ -19,7 +19,7 @@
 
 
 if [ $# -lt 3 ]; then
-    echo "Usage: `basename $0` <token> <org>"
+    echo "Usage: `basename $0` <user> <token> <org> and optional <repoName>"
     exit
 fi
 
