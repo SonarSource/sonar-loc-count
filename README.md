@@ -65,7 +65,7 @@ Counts lines of code from a GitLab.com Group or Project. Requires to pass [perso
 <gitlab_com.sh> 1234567890abcdefgh myGitLabGroupName
 ```
 ```
-<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupName/MyProject
+<gitlab_com.sh> 1234567890abcdefgh myGitLabGroupName/MyProjectName
 ```
 
 Local Filesystem:
