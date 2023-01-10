@@ -27,10 +27,13 @@ Most scripts will produce two reports of LoC by language (.lang) and by reposito
 
 [github.com](https://github.com):
 
-Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.
+Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
 <github_com.sh> myuser 1234567890abcdefgh myGitHubDotComOrg
+```
+```
+<github_com.sh> myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName
 ```
 
 [bitbucket.org](https://bitbucket.org):
@@ -44,9 +47,13 @@ Counts lines of code from a Bitbucket.org organization. Requires to pass usernam
 [Azure DevOps Services](https://dev.azure.com):
 
 Counts lines of code from a Azure DevOps Services organization. Requires to pass [personal access token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) and the organization.  The token must have Code > Read permissions.
+The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<azure_devops_services.sh> 1234567890abcdefgh myADOOrg
+<azure_devops_services.sh> 1234567890abcdefgh myADOOrg 
+```
+```
+<azure_devops_services.sh> 1234567890abcdefgh myADOOrg MyProjectName
 ```
 
 [Gitlab.com](https://gitlab.com):
