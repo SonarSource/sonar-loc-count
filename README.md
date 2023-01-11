@@ -8,6 +8,8 @@ This is a collection of shell scripts that demonstrate how to count lines of cod
 * [General usage](#general-usage)
 * [Contributions and Feedbacks](#Contributions-and-feedbacks)
 
+![architecture](cloc.png)
+
 Installation
 ------------
 
