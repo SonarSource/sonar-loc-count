@@ -78,7 +78,7 @@ else {
           Write-Host "Get ${RepoName}/${BrancheName}"
           $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${RepoName}/_git/${RepoName}"
           # Create Commad Git clone and replace space by %20
-          $RepoName2=$RepoName.replace(" ","_")
+          $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
           $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchePathName + "' " + $RepoName2
           Invoke-Expression -Command $cmdline0  
 
