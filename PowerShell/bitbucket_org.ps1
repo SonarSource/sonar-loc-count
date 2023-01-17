@@ -42,7 +42,7 @@ else {
      # Test if request for for 1 Repo or more Repo
      if ($args.Length -eq 5) {
       $Project=$args[4]
-      $GetAPI="repos/$wks/$Project"     
+      $GetAPI="repositories/$wks/$Project"     
     } else {
       $GetAPI="repositories/$wks"
     }
@@ -53,15 +53,15 @@ else {
       $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes("$($users):$($connectionToken)"))
       # Set API URL to Get Repositories
       $ProjectUrl="${BaseAPI}/${GetAPI}"  
-      Write-Host "`n Project : ${ProjectUrl} `n"
+      
       # Get List of Repositories
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      $NumberRepositories=$Repo.values.count 
+      if ($args.Length -eq 5) { $NumberRepositories=$Repo.count }
+      else { $NumberRepositories=$Repo.value.count }
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
 
-      
       
       # Parse Repositories
       #--------------------------------------------------------------------------------------#
@@ -70,8 +70,8 @@ else {
        
         # Get Repositorie Name and ID
         if ( $NumberRepositories -eq 1) { 
-                $RepoName= $Repo.values.name
-                $IDrepo=$Repo.values.uid
+                $RepoName= $Repo.name
+                $IDrepo=$Repo.uuid
         }
         else {
                 $RepoName= $Repo.values.name[$j]
@@ -97,7 +97,9 @@ else {
                $NumberBranch=$Branch.values.count
             }
          }
-        $NumberBranch=$Branch.values.count
+        
+         $NumberBranch=$Branch.values.count
+       
      
         # Parse Repositories/Branches 
         #--------------------------------------------------------------------------------------#

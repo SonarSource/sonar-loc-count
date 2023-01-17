@@ -31,7 +31,7 @@ else {
 
     # Set Variables token, organization and PATH for cloc binary
     #--------------------------------------------------------------------------------------#
-    #$users=$args[0]
+   
     $connectionToken=$args[0]
     $organization=$args[1]
     $CLOCPATH=$args[2]
