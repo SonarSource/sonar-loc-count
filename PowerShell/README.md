@@ -36,6 +36,7 @@ The script generates a report per project(File : ***ProjectName.txt***) that ind
 ```
 <azure_devops_services.sh> <token> <organization> <PATH for cloc binary>
 azure_devops_services.sh 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe
+```
 or
 ```
 <azure_devops_services.sh> <token> <organization> <MyProjectName>
@@ -58,7 +59,6 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.ex
 GitLab :
 
 Counts lines of code from a GitLab.com Group or Project. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
-
 
 ```
 <gitlab_com.sh> <token> <groupName> <PATH for cloc binary>
