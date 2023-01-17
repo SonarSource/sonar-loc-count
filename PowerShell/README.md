@@ -80,6 +80,6 @@ bitbucket_org.sh myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<bitbucket_org.sh> <user> <assordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
+<bitbucket_org.sh> <user> <PassordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
