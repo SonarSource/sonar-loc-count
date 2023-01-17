@@ -1,82 +1,93 @@
-#******************************************************************************************#
-#                                                                                          #
-#  @project     : LoC Counting PowerShell Scripts                                          #
-#  @package     :                                                                          #
-#  @subpackage  : azuredevops.ps1                                                          #
-#  @access      :                                                                          #
-#  @paramtype   : connectionToken,organization,cloc PATH                                   #
-#  @argument    :                                                                          #
-#  @description : Get Number ligne of Code in Azure DevOPS                                 #
-#  @usage : ./azuredevops.ps1 <token> <org> <PATH for cloc binary> and optional <projects> #                                                              
-#                                                                                          #
-#                                                                                          #
-#  @author Emmanuel COLUSSI                                                                #
-#  @version 1.01                                                                           #
-#                                                                                          #
-#******************************************************************************************#
+#**************************************************************************************************#
+#                                                                                                  #
+#  @project     : LoC Counting PowerShell Scripts                                                  #
+#  @package     :                                                                                  #
+#  @subpackage  : gitlab_com.ps1                                                                   #
+#  @access      :                                                                                  #
+#  @paramtype   : connectionToken,groupName or path_with_namespace                                 #
+#  @argument    :                                                                                  #
+#  @description : Get Number ligne of Code in GitLab DevOPS                                        #
+#  @usage : ./gitlab_com.sh <token> <groupName>                                                    #                                                              
+#                                                                                                  #
+#                                                                                                  #
+#  @author Emmanuel COLUSSI                                                                        #
+#  @version 1.01                                                                                   #
+#                                                                                                  #
+#**************************************************************************************************#
 
 
-
-# Set Variables CLOCBr (object: [NBR_LINE_CODE][BRANCHE_NAME]), cpt, NBCLOC, BaeAPI
+# Set Variables CLOCBr (object: [NBR_LINE_CODE][BRANCHE_NAME]), cpt, NBCLOC,BaseAPI
 #--------------------------------------------------------------------------------------#
 
 $CLOCBr=@([PSCustomObject]@{ })
 $NBCLOC="cpt.txt"
 $cpt=0
-$BaseAPI="https://dev.azure.com"
+$BaseAPI="https://gitlab.com/api/v4"
 
 if ($args.Length -lt 3) {
-  Write-Output ('Usage: azuredevops.ps1 <token> <org> <PATH for cloc binary> optional <projects>')
+  Write-Output ('Usage: gitlab_com.ps1 <token> <org> <PATH for cloc binary> optional <projects>')
 } 
 else {
 
     # Set Variables token, organization and PATH for cloc binary
     #--------------------------------------------------------------------------------------#
     $connectionToken=$args[0]
-    $organization=$args[1]
+    $groupname=$args[1]
     $CLOCPATH=$args[2]
 
-    # Test if request for for 1 Repo or more Repo
-    if ($args.Length -eq 4) {
-      $Project=$args[3]
-      $GetAPI="$organization/$Project/_apis/git/repositories/$Project"
-    } else {
-      $GetAPI="$organization/_apis/git/repositories?api-version=7.0"
+
+    $StSubgroupName=$groupname | Select-String -Pattern '/'
+    if ($StSubgroupName.MAtches.Success -eq "True") { $Namespace=1 } else { $Namespace=0 }  
+   
+    # Test if request for for 1 Project or more Project in GroupName
+    if ($Namespace -eq 1 ) {
+            $groupname1=$groupname.replace("/","%2f")
+            $GetAPI="/projects/$groupname1"
     }
+
+    else  {
+            $GetAPI="/groups/$groupname/projects?include_subgroups=true"
+  
+    }
+
 
     if(Test-Path $CLOCPATH) {
 
       # Encode Authentification Token
       $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($connectionToken)"))
       # Set API URL to Get Repositories
-      $ProjectUrl = "${BaseAPI}/${GetAPI}" 
+      $ProjectUrl="${BaseAPI}${GetAPI}"  
+     
       # Get List of Repositories
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      if ($args.Length -eq 4) { $NumberRepositories=$Repo.count }
-      else { $NumberRepositories=$Repo.value.count }
+      $NumberRepositories=$Repo.count 
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
-
+      
       # Parse Repositories
       #--------------------------------------------------------------------------------------#
 
       for ($j=0; $j -lt $NumberRepositories;$j++) {
        
         # Get Repositorie Name and ID
-        if ($args.Length -eq 4) { 
-          $RepoName= $Repo.name
-          $IDrepo=$Repo.id
+        if ( $NumberRepositories -eq 1) { 
+                $RepoName= $Repo.name
+                $IDrepo=$Repo.id
+                $Repourl=$Repo.http_url_to_repo
         }
         else {
-          $RepoName= $Repo.value[$j].name
-          $IDrepo=$Repo.value[$j].id
+                $RepoName= $Repo.name[$j]
+                $IDrepo=$Repo.id[$j]
+                $Repourl=$Repo.http_url_to_repo[$j]
+          
         }
         Write-Host "-----------------------------------------------------------------"
         Write-Host "`n Repository Number :$j  Name : $RepoName id : $IDrepo`n"
-     
+    
         # Set API URL to Get Branches
-        $ProjetBranchUrl1="${BaseAPI}/${organization}/${RepoName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
+        $ProjetBranchUrl1="${BaseAPI}/projects/${IDrepo}/repository/branches" 
+  
        # [uri]::EscapeDataString( $ProjetBranchUrl)
         $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
        
@@ -88,31 +99,35 @@ else {
               # Write-Host $_.ErrorDetails.Message
             } else {
               # Get Number of Branches
-               $NumberBranch=$Branch.value.count
+               $NumberBranch=$Branch.count
             }
          }
-        $NumberBranch=$Branch.value.count
+        $NumberBranch=$Branch.count
      
         # Parse Repositories/Branches 
         #--------------------------------------------------------------------------------------#
 
         for ($i = 0; $i -lt $NumberBranch; $i++) {
           # Get Branche Name 
-          $BranchePathName=$Branch.value[$i].name.replace('refs/heads/','')
-          $BranchList= $Branch.value[$i].name.Split("/")
-          $BrancheName=$BranchList[$BranchList.count -1 ]
-         
+          if($NumberBranch -ne 1) { 
+            $BrancheName=$Branch.name[$i]
+            }
+             else { $BrancheName=$Branch.name
+            }    
         
           # Clone Repository locally
           Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
-          $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${RepoName}/_git/${RepoName}"
+
+          $Repourl=$Repourl.replace(" ","%20")
+        
           # Create Commad Git clone and replace space by %20
           $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
 
           if (Test-Path -Path $RepoName2) {
              Remove-Item $RepoName2 -Recurse -Force
           } else {}
-          $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchePathName + "' " + $RepoName2
+          #$cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
+          $cmdline0=" git clone '" + $Repourl + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
           Invoke-Expression -Command $cmdline0  
 
           # Run Analyse : run cloc on the local repository
