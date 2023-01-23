@@ -77,7 +77,7 @@ do
         echo -e "\n       Branche Name : $BrancheNameF1\n"
 
         # Create Commad Git clone 
-        git clone  https://oauth2:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
+        git clone  https://$user:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
 
         # Run Analyse : run cloc on the local repository
         cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0
