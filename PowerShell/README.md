@@ -12,7 +12,7 @@ To count the number of lines of code per language we use the [cloc utility](http
 
 Before you get started, you’ll need to have these things:
 * PowerShell 7.3.0+
-* [cloc](https://sourceforge.net/projects/cloc/files/cloc/v1.64/)  installed
+* [cloc](https://github.com/AlDanial/cloc)  installed
 * Git installed
 
 
