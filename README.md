@@ -37,7 +37,6 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName
 If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 53
 
        1 Page = 100 repos max
-       
        Example for 150 repos : GetAPI="orgs/$org/repos?per_page=100&page=2"
 
 ### [bitbucket.org](https://bitbucket.org):
