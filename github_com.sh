@@ -46,7 +46,11 @@ cpt=0
 
 if [ -z ${4} ]; then 
      jq_args=".[] | \"\(.name):\(.id)\""
-     GetAPI="orgs/$org/repos?per_page=100"
+     # If you have more than 100 repos Change Value of parameter page=Number_of_page
+     # 1 Page = 100 repos max
+     # Example for 150 repos :
+     #  GetAPI="orgs/$org/repos?per_page=100&page=2"
+     GetAPI="orgs/$org/repos?per_page=100&page=1"
 else 
     jq_args="\"\(.name):\(.id)\"" 
     GetAPI="repos/$org/$4"
