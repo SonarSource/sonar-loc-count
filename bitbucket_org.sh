@@ -46,7 +46,11 @@ cpt=0
 
 if [ -z ${4} ]; then 
      jq_args=".values[] | \"\(.name):\(.uuid)\""
-     GetAPI="repositories/$wks?pagelen=100&page=10"
+     # If you have more than 100 repos Change Value of parameter page=Number_of_page
+     # 1 Page = 100 repos max
+     # Example for 150 repos :
+     #  GetAPI="orgs/$org/repos?pagelen=100&page=2"
+     GetAPI="repositories/$wks?pagelen=100&page=1"
 else 
     jq_args="\"\(.name):\(.uuid)\"" 
     GetAPI="repositories/$wks/$4"
