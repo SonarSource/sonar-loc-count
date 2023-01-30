@@ -55,11 +55,7 @@ or
 <github_com.sh> <user> <token> <organization> <PATH for cloc binary> <MyRepoName>
 github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
 ```
-f you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 48
 
-       1 Page = 100 repos max
-       Example for 150 repos : GetAPI="orgs/$org/repos?per_page=100&page=2"
-       
 ### [Gitlab.com](https://gitlab.com):
 
 Counts lines of code from a GitLab.com Group or Project. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
@@ -73,10 +69,6 @@ or
 <gitlab_com.sh> <token> <groupName//MyProjectName> <PATH for cloc binary> 
 gitlab_com.sh 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
 ```
-f you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 45 or 49
-
-       1 Page = 100 repos max
-       Example for 150 repos in line 49 :  GetAPI="/projects/$groupname1?per_page=100&page=2"
        
 ### [bitbucket.org](https://bitbucket.org):
 
@@ -91,7 +83,4 @@ or
 <bitbucket_org.sh> <user> <PassordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
-If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 51
 
-       1 Page = 100 repos max
-       Example for 150 repos : GetAPI="repositories/$wks?pagelen=100&page=2"
