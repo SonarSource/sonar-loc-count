@@ -46,7 +46,7 @@ cpt=0
 
 if [ -z ${4} ]; then 
      jq_args=".[] | \"\(.name):\(.id)\""
-     GetAPI="orgs/$org/repos"
+     GetAPI="orgs/$org/repos?per_page=100"
 else 
     jq_args="\"\(.name):\(.id)\"" 
     GetAPI="repos/$org/$4"
