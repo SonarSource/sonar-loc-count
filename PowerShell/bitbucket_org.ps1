@@ -48,7 +48,7 @@ else {
      # 1 Page = 100 repos max
      # Example for 150 repos :
      # GetAPI="repositories/$wks?pagelen=100&page=2"
-      $GetAPI="repositories/$wks?pagelen=100&page=1"
+      $GetAPI="repositories/$wks"
     }
 
     if(Test-Path $CLOCPATH) {
