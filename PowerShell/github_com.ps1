@@ -41,11 +41,8 @@ else {
       $Project=$args[3]
       $GetAPI="repos/$organization/$Project"     
     } else {
-     # If you have more than 100 repos Change Value of parameter page=Number_of_page
-     # 1 Page = 100 repos max
-     # Example for 150 repos :
-     #  GetAPI="orgs/$org/repos?per_page=100&page=2"
-      $GetAPI="orgs/$organization/repos?per_page=100&page=1"
+
+      $GetAPI="orgs/$organization/repos"
     }
 
     if(Test-Path $CLOCPATH) {
