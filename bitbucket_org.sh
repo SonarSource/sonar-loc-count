@@ -46,7 +46,7 @@ cpt=0
 
 if [ -z ${4} ]; then 
      jq_args=".values[] | \"\(.name):\(.uuid)\""
-     GetAPI="repositories/$wks"
+     GetAPI="repositories/$wks?pagelen=100&page=10"
 else 
     jq_args="\"\(.name):\(.uuid)\"" 
     GetAPI="repositories/$wks/$4"
