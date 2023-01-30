@@ -44,10 +44,6 @@ else {
       $Project=$args[4]
       $GetAPI="repositories/$wks/$Project"     
     } else {
-     # If you have more than 100 repos Change Value of parameter page=Number_of_page
-     # 1 Page = 100 repos max
-     # Example for 150 repos :
-     # GetAPI="repositories/$wks?pagelen=100&page=2"
       $GetAPI="repositories/$wks"
     }
 
