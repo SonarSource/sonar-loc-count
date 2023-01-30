@@ -51,6 +51,10 @@ or
 <bitbucket_org.sh> <user> <assordToken> <myWorkspace> <MyProjectName>
 <bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace MyProjectName
 ```
+If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 53
+
+       1 Page = 100 repos max
+       Example for 150 repos : GetAPI="orgs/$org/repos?pagelen=100&page=2"
 
 ### [Azure DevOps Services](https://dev.azure.com):
 Counts lines of code from a Azure DevOps Services organization. Requires to pass [personal access token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) and the organization.  The token must have Code > Read permissions.
@@ -79,7 +83,11 @@ or
 <gitlab_com.sh> <token> <groupName//MyProjectName> 
 gitlab_com.sh 1234567890abcdefgh myGitLabGroupName/MyProjectName
 ```
+If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 58 or 61
 
+       1 Page = 100 repos max
+       Example for 150 repos :  GetAPI="/projects/$groupname1?per_page=100&page=2"
+       
 ### Local Filesystem:
 Counts lines of code from a local directory or file.  This script only produces the LoC by language (.lang)
 
