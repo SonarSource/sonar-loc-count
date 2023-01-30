@@ -42,11 +42,11 @@ else {
     # Test if request for for 1 Project or more Project in GroupName
     if ($Namespace -eq 1 ) {
             $groupname1=$groupname.replace("/","%2f")
-            $GetAPI="/projects/$groupname1?per_page=100&page=1"
+            $GetAPI="/projects/$groupname1"
     }
 
     else  {
-            $GetAPI="/groups/$groupname/projects?include_subgroups=true?per_page=100&page=1"
+            $GetAPI="/groups/$groupname/projects?include_subgroups=true"
   
     }
 
