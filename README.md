@@ -54,7 +54,7 @@ or
 If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 53
 
        1 Page = 100 repos max
-       Example for 150 repos : GetAPI="orgs/$org/repos?pagelen=100&page=2"
+       Example for 150 repos : GetAPI="repositories/$wks?pagelen=100&page=2"
 
 ### [Azure DevOps Services](https://dev.azure.com):
 Counts lines of code from a Azure DevOps Services organization. Requires to pass [personal access token](https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate?view=azure-devops) and the organization.  The token must have Code > Read permissions.
