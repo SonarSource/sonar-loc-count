@@ -47,7 +47,7 @@ else {
      # If you have more than 100 repos Change Value of parameter page=Number_of_page
      # 1 Page = 100 repos max
      # Example for 150 repos :
-     #  GetAPI="orgs/$org/repos?pagelen=100&page=2"
+     # GetAPI="repositories/$wks?pagelen=100&page=2"
       $GetAPI="repositories/$wks?pagelen=100&page=1"
     }
 
