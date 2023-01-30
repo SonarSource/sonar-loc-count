@@ -49,6 +49,10 @@ cpt=0
 
 
 # Test if request for for 1 Project or more Project in GroupName
+     # If you have more than 100 repos Change Value of parameter page=Number_of_page
+     # 1 Page = 100 repos max
+     # Example for 150 repos :
+     #  GetAPI="orgs/$org/repos?per_page=100&page=2"
 if [ $Namespace -eq 1 ]; then
         groupname1=` echo $groupname|$SED s/'\/'/'%2f'/g`
         GetAPI="/projects/$groupname1"
