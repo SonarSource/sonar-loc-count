@@ -34,26 +34,26 @@ CCounts lines of code from a Azure DevOps Services organization. Requires to pas
 The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<azure_devops_services.sh> <token> <organization> <PATH for cloc binary>
-azure_devops_services.sh 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe
+<azuredevops.ps1> <token> <organization> <PATH for cloc binary>
+a./azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<azure_devops_services.sh> <token> <organization> <MyProjectName>
-azure_devops_services.sh 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe MyProjectName
+<azuredevops.ps1> <token> <organization> <MyProjectName>
+azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
 ### [github.com](https://github.com):
 
 Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<github_com.sh> <user> <token> <organization> <PATH for cloc binary>
-github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
+<github_com.ps1> <user> <token> <organization> <PATH for cloc binary>
+./github_com.ps1 myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<github_com.sh> <user> <token> <organization> <PATH for cloc binary> <MyRepoName>
-github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
+<github_com.ps1> <user> <token> <organization> <PATH for cloc binary> <MyRepoName>
+./github_com.ps1 myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
 ```
 
 ### [Gitlab.com](https://gitlab.com):
@@ -61,13 +61,13 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.ex
 Counts lines of code from a GitLab.com Group or Project. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<gitlab_com.sh> <token> <groupName> <PATH for cloc binary>
-gitlab_com.sh 1234567890abcdefgh myGitLabGroupName $HOME_CLOC/bin/cloc.exe
+<gitlab_com.ps1> <token> <groupName> <PATH for cloc binary>
+./gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<gitlab_com.sh> <token> <groupName//MyProjectName> <PATH for cloc binary> 
-gitlab_com.sh 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
+<gitlab_com.ps1> <token> <groupName//MyProjectName> <PATH for cloc binary> 
+./gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
 ```
        
 ### [bitbucket.org](https://bitbucket.org):
@@ -75,12 +75,12 @@ gitlab_com.sh 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/
 Counts lines of code from a Bitbucket.org organization. Requires to pass username, [App token password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug.  The token must have Repositories Read permissions.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<bitbucket_org.sh> <user> <PassordToken> <myWorkspace> <PATH for cloc binary>
-bitbucket_org.sh myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
+<bitbucket_org.ps1> <user> <PassordToken> <myWorkspace> <PATH for cloc binary>
+./bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<bitbucket_org.sh> <user> <PassordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
-<bitbucket_org.sh> myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
+<bitbucket_org.ps1> <user> <PassordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
+./bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
 
