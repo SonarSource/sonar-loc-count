@@ -73,7 +73,7 @@ else {
           $IDProject=$Projects.value[$j].id
         }
         Write-Host "--------------------------------------------------------------------------------------"
-        Write-Host "`n Peoject Number :$j  Name : $ProjectName id : $IDProject`n"
+        Write-Host "`n Project Number :$j  Name : $ProjectName id : $IDProject`n"
      
         # Set API URL to Get Repo
     
