@@ -151,11 +151,11 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}"
+printf "The maximum lines of code on the Organization is : < %' .f > result in <global.txt>\n" "${cpt}"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
 echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}" >> global.txt
+printf "The maximum lines of code on the Organization is : < %' .f > result in <global.txt>\n" "${cpt}" >> global.txt
 echo -e "---------------------------------------------------------------------------------------------" >> global.txt
 
 
