@@ -93,6 +93,7 @@ else {
             }
          }
         $NumberRepo=$Repo.value.count
+        Write-Host "`n Number of Repositories : ${NumberRepo}  for Project : ${NumberProjects}`n"
      
         # Parse Repositories
         #--------------------------------------------------------------------------------------#
