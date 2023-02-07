@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+# set -x
 #**************************************************************************#
 #                                                                          #
 #  @project     : LoC Counting bash Scripts                                #
@@ -41,56 +41,70 @@ LIST=""
 NBCLOC="cpt.txt"
 cpt=0
 
-# Test if request for for 1 Repo or more Repo
+# Test if request for for 1 Project or more Project
 
 if [ -z ${3} ]; then 
      jq_args=".value[] | \"\(.name):\(.id)\""
-     GetAPI="$org/_apis/git/repositories?api-version=7.0"
+     GetAPI="$org/_apis/projects?api-version=7.0"
 else 
     jq_args="\"\(.name):\(.id)\""
-    GetAPI="$org/$3/_apis/git/repositories/$3"
+    GetAPI="$org/_apis/projects/${3}?api-version=7.0"
 fi
 
-# Get List of Repositories : get Name , ID and http_url_to_repo
+#  Parse Project
 curl -s -u :$connectionToken $BaseAPI/$GetAPI|jq -r ''"${jq_args}"''| while IFS=: read -r Name ID;
 
 do
-    echo "-----------------------------------------------------------------"
-    echo -e "Repository Number :$i  Name : $Name id : $ID"
-    # Get List of Branches
+    echo "--------------------------------------------------------------------------------------------"
+    echo -e "Project Number :$i  Name : $Name id : $ID"
+    # Get List of Project
 
-    # Replace space by - in Repository name for created local file
+    # Replace space by - in Project name for created local file
     NameFile=` echo $Name|$SED s/' '/'-'/g`
-    # Replace space by %20 in Repository name for Repository URL
+    # Replace space by %20 in Project name for Project URL
     name1=` echo $Name|$SED s/' '/'%20'/g`
 
-    curl -s -u :$connectionToken: "$BaseAPI/$org/$name1/_apis/git/repositories/$ID/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
+    #  Parse Project : Get Repositories
+
+     if [ -n ${3} ]; then jq_args=".value[] | \"\(.name):\(.id)\""
+     fi
+    curl -s -u :$connectionToken "$BaseAPI/$org/$name1/_apis/git/repositories?api-version=7.0" | jq -r ''"${jq_args}"'' | while IFS=: read -r RepoName RepoID;
     do
-        # Get Branche Name without path reference
-        BrancheNameF1=` echo $BrancheName|$SED s/'refs\/heads\/'/''/g`
-        # Replace / by - in Branche Name for created local file
-        BrancheNameF=` echo $BrancheNameF1|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
+        # Replace / by - in Repo Name for created local file
+        RepoNameF=` echo $RepoName|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
 
-        LISTF="${NameFile}_${BrancheNameF}.cloc"
-        echo -e "\n       Branche Name : $BrancheNameF1\n"
+         echo "--------------------------------------------------------------------------------------------"
+         echo -e "   Repository Name : $RepoName id : $RepoID"
+  
+          # Get List of Branches
+          curl -s -u :$connectionToken "$BaseAPI/$org/$RepoName/_apis/git/repositories/$RepoID/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
+          do
+             # Get Branche Name without path reference
+            BrancheNameF1=` echo $BrancheName|$SED s/'refs\/heads\/'/''/g`
+            # Replace / by - in Branche Name for created local file
+            BrancheNameF=` echo $BrancheNameF1|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
 
-        # Create Commad Git clone 
-        git clone $BaseAPI/$org/$name1/_git/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
+            LISTF="${NameFile}_${BrancheNameF}.cloc"
+            echo -e "\n       Branche Name : $BrancheNameF1\n"
 
-        # Run Analyse : run cloc on the local repository
-        cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0
+         # Create Commad Git clone 
+            git clone https://$connectionToken@dev.azure.com/$org/$name1/_git/$RepoName --depth 1 --branch $BrancheNameF1 $NameFile
+
+         # Run Analyse : run cloc on the local repository
+            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --timeout 0
     
-        # Delete Directory projet
-        /bin/rm -r $NameFile
+         # Delete Directory projet
+            /bin/rm -r $NameFile
        
-        $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
+            $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
 
+         done
+           
     done
-
      # Generate reports
 
         echo -e "\nBuilding final report for projet $NameFile : $NameFile.txt"
-        echo "-----------------------------------------------------------------------------------------------------------------------" 
+        echo "-------------------------------------------------------------------------------------------" 
 
         # BRTAB2 : array with branche Name , The index is number max of cloc 
         # NBTAB1 : array with number max of cloc by branche
@@ -114,9 +128,9 @@ do
         fi      
 
         printf "The maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}"
-        echo -e "\n---------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt
+        echo -e "\n-------------------------------------------------------------------------------------------" >> $NameFile.txt
         printf "\nThe maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}" >> $NameFile.txt
-        echo -e "-----------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt 
+        echo -e "-------------------------------------------------------------------------------------------" >> $NameFile.txt 
 
         # set Nbr Loc by Project in File cpt.txt
         echo "${INDEX01}" >> $NBCLOC
