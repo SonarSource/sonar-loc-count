@@ -112,7 +112,7 @@ else {
           Write-Host "`n Repository Number :$i  Name : $RepoName id : $IDrepo`n"
        
           # Set API URL to Get Branches
-          $ProjetBranchUrl1="${BaseAPI}/${organization}/${RepoName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
+          $ProjetBranchUrl1="${BaseAPI}/${organization}/${ProjectName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
          # [uri]::EscapeDataString( $ProjetBranchUrl)
           $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
   
