@@ -56,7 +56,7 @@ else {
       if ($args.Length -eq 4) { $NumberProjects= $Projects.count }
       else { $NumberProjects= $Projects.value.count }
 
-      Write-Host "`n Number of Project : ${NumberProjects} `n"
+      Write-Host "`n Number of Project : ${NumberProjects}  for Project : ${ProjectName}`n"
 
       # Parse Project : Get Repositories
       #--------------------------------------------------------------------------------------#
@@ -129,9 +129,10 @@ else {
                 }
               }
             $NumberBranch=$Branch.value.count
-
+            Write-Host "`n Number of Branches : ${NumberBranch}  for Repository : ${RepoName}`n"
           
             if($NumberBranch -gt 0) {
+             
               # Parse Repositories/Branches 
               #--------------------------------------------------------------------------------------#
           
