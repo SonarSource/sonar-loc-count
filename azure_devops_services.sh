@@ -34,7 +34,7 @@ BaseAPI="https://dev.azure.com"
 
 # If you use mac osx you have to install the gnu-sed (brew install gnu-sed) then you set in the scripts the variable SED. SED=gsed
 # For linux SED=sed
-SED="gsed"
+SED="sed"
 i=1
 LISTF=""
 LIST=""
