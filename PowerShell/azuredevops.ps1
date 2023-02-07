@@ -108,94 +108,109 @@ else {
                         $RepoName= $Repo.value[$i].name
                         $IDrepo=$Repo.value[$i].id
                 }
-          Write-Host "--------------------------------------------------------------------------------------"
-          Write-Host "`n Repository Number :$i  Name : $RepoName id : $IDrepo`n"
+            Write-Host "--------------------------------------------------------------------------------------"
+            Write-Host "`n Repository Number :$i  Name : $RepoName id : $IDrepo`n"
        
-          # Set API URL to Get Branches
-          $ProjetBranchUrl1="${BaseAPI}/${organization}/${ProjectName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
-         # [uri]::EscapeDataString( $ProjetBranchUrl)
-          $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
+            # Set API URL to Get Branches
+            $ProjetBranchUrl1="${BaseAPI}/${organization}/${ProjectName}/_apis/git/repositories/${IDrepo}/refs?filter=heads/&api-version=7.0"
+            # [uri]::EscapeDataString( $ProjetBranchUrl)
+            $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
   
-          # Get List of Branches
-          try {
-           $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
-          } Catch {
-              if($_.ErrorDetails.Message) {
-                # Write-Host $_.ErrorDetails.Message
-              } else {
-                # Get Number of Branches
-                 $NumberBranch=$Branch.value.count
+            # Get List of Branches
+            try {
+              $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
+            } Catch {
+                if($_.ErrorDetails.Message) {
+                  # Write-Host $_.ErrorDetails.Message
+                } else {
+                  # Get Number of Branches
+                   $NumberBranch=$Branch.value.count
+                }
               }
-           }
-          $NumberBranch=$Branch.value.count
-       
-          # Parse Repositories/Branches 
-          #--------------------------------------------------------------------------------------#
+            $NumberBranch=$Branch.value.count
+
           
-          for ($i2 = 0; $i2 -lt $NumberBranch; $i2++) { 
+            if($NumberBranch -gt 0) {
+              # Parse Repositories/Branches 
+              #--------------------------------------------------------------------------------------#
+          
+              for ($i2 = 0; $i2 -lt $NumberBranch; $i2++) { 
 
-             # Get Branche Name 
-            $BranchePathName=$Branch.value[$i2].name.replace('refs/heads/','')
-            $BranchList= $Branch.value[$i2].name.Split("/")
-            $BrancheName=$BranchList[$BranchList.count -1 ]
+                # Get Branche Name 
+                $BranchePathName=$Branch.value[$i2].name.replace('refs/heads/','')
+                $BranchList= $Branch.value[$i2].name.Split("/")
+                $BrancheName=$BranchList[$BranchList.count -1 ]
          
         
-            # Clone Repository locally
-            Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
-            $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${ProjectName}/_git/${RepoName}"
-            # Create Commad Git clone and replace space by %20
-            $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
+                # Clone Repository locally
+                Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
+                $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${ProjectName}/_git/${RepoName}"
+                # Create Commad Git clone and replace space by %20
+                $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
 
-            if (Test-Path -Path $RepoName2) {
-                Remove-Item $RepoName2 -Recurse -Force
-            } else {}
-            $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchePathName + "' " + $RepoName2
-            Invoke-Expression -Command $cmdline0  
+                if (Test-Path -Path $RepoName2) {
+                    Remove-Item $RepoName2 -Recurse -Force
+                } else {}
+                $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchePathName + "' " + $RepoName2
+                Invoke-Expression -Command $cmdline0  
 
-            # Run Analyse : run cloc on the local repository
-            Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
-            $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName2}_${BrancheName}.cloc  --timeout 0"
-            $cmdline2=$CLOCPATH + " " + $cmdparms2
-            Invoke-Expression -Command $cmdline2
+                # Run Analyse : run cloc on the local repository
+                Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
+                $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName2}_${BrancheName}.cloc  --timeout 0"
+                $cmdline2=$CLOCPATH + " " + $cmdparms2
+                Invoke-Expression -Command $cmdline2
 
-            If ( -not (Test-Path -Path ${RepoName2}_${BrancheName}.cloc) )  {
-             "0 Files Analyse in ${RepoName2}/${BrancheName}" | Out-File ${RepoName2}_${BrancheName}.cloc
-            }
+                If ( -not (Test-Path -Path ${RepoName2}_${BrancheName}.cloc) )  {
+                   "0 Files Analyse in ${RepoName2}/${BrancheName}" | Out-File ${RepoName2}_${BrancheName}.cloc
+                }
          
-            # Generate report
-            "Result Analyse Counting ${RepoName2} / ${BrancheName}" | Out-File -Append "${RepoName2}.txt"
-            Get-content ${RepoName2}_${BrancheName}.cloc | Out-File -Append "${RepoName2}.txt"
-        }   
-        
-      }
+                # Generate report
+                "Result Analyse Counting ${RepoName2} / ${BrancheName}" | Out-File -Append "${RepoName2}.txt"
+                Get-content ${RepoName2}_${BrancheName}.cloc | Out-File -Append "${RepoName2}.txt"
+              }   
+              #--------------------------------------------------------------------------------------#
+            } 
+            else { Write-Host "`n      Repository No Branche `n" }
+        }
          #--------------------------------------------------------------------------------------#
 
         Write-Host "`nBuilding final report for projet $ProjectName : $ProjectName.txt"
 
 
-        Get-ChildItem -Path .\* -Include *.cloc |ForEach-Object { $NMCLOCB=Get-content $_.Name |Select-String "SUM:";$NMCLOCB-replace "\s{2,}" , " "| ForEach-Object{$NMCLOCB1=$_.ToString().split(" ");$CLOCBr+=@([PSCustomObject]@{ CLOC=$NMCLOCB1[4] ; BRANCH=${BrancheName}})};Remove-Item $_.Name -Recurse -Force} 
+        Get-ChildItem -Path .\* -Include *.cloc |ForEach-Object { $NMCLOCB=Get-content $_.Name |Select-String "SUM:";$NMCLOCB-replace "\s{2,}" , " "| ForEach-Object{$NMCLOCB1=$_.ToString().split(" ");$CLOCBr+=@([PSCustomObject]@{ CLOC=$NMCLOCB1[4] ; BRANCH=${BrancheName}})};Remove-Item $_.Name -Recurse -Force}
         $CLOCBr | Select-Object | Sort-Object -Property CLOC -Descending -OutVariable Sorted | Out-Null
 
         $clocmax=$($Sorted[0].CLOC -as [decimal]).ToString('N2')
         $Branchmax=$Sorted[0].BRANCH
 
-        # Remove local repos
-        if (Test-Path -Path $RepoName2) {
-          Remove-Item $RepoName2 -Recurse -Force
-        } else {}
+        if ($NumberBranch -gt 0) {
+           # Remove local repos
+           if (Test-Path -Path $RepoName2) {
+             Remove-Item $RepoName2 -Recurse -Force
+            } else {}
        
-        # Reset object
-        $CLOCBr=@([PSCustomObject]@{ })
-      
-        
+            # Reset object
+            $CLOCBr=@([PSCustomObject]@{ })
+          }
 
-        If($NumberBranch -eq 0) {$RepoName2=$RepoName}
-        Write-Host "-------------------------------------------------------------------------------------------------------"
-        Write-Host "`nThe maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"
-        Write-Host "-------------------------------------------------------------------------------------------------------"
-        "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
-        "The maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"| Out-File -Append "${RepoName2}.txt"
-        "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+           If($NumberBranch -eq 0) {
+                $RepoName2=$RepoName
+                Write-Host "-------------------------------------------------------------------------------------------------------"
+                Write-Host "`nThe maximum lines of code in the ${RepoName2} project is : < $clocmax > `n"
+                Write-Host "-------------------------------------------------------------------------------------------------------"
+                "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+                "The maximum lines of code in the ${RepoName2} project is : < $clocmax > `n"| Out-File -Append "${RepoName2}.txt"
+                 "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+            }
+            else {
+                    Write-Host "-------------------------------------------------------------------------------------------------------"
+                    Write-Host "`nThe maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"
+                    Write-Host "-------------------------------------------------------------------------------------------------------"
+                     "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+                    "The maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"| Out-File -Append "${RepoName2}.txt"
+                    "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+                    
+            }
 
         $clocmax | Out-File -Append "$NBCLOC"
       }  
