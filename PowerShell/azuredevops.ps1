@@ -11,11 +11,15 @@
 #                                                                                          #
 #                                                                                          #
 #  @author Emmanuel COLUSSI                                                                #
-#  @version 1.02                                                                           #
+#  @version 1.03                                                                           #
 #                                                                                          #
 #******************************************************************************************#
 
 
+# Set Language 
+function Set-CultureWin([System.Globalization.CultureInfo] $culture) { 
+  [System.Threading.Thread]::CurrentThread.CurrentUICulture = $culture ; [System.Threading.Thread]::CurrentThread.CurrentCulture = $culture 
+} 
 
 # Set Variables CLOCBr (object: [NBR_LINE_CODE][BRANCHE_NAME]), cpt, NBCLOC, BaeAPI
 #--------------------------------------------------------------------------------------#
@@ -30,12 +34,20 @@ if ($args.Length -lt 3) {
 } 
 else {
 
-    # Set Variables token, organization and PATH for cloc binary
+    # Set Variables token, organization and PATH for cloc binary and Language Environment
     #--------------------------------------------------------------------------------------#
     $connectionToken=$args[0]
     $organization=$args[1]
     $CLOCPATH=$args[2]
 
+     # Set Language en-US
+    Set-CultureWin en-US 
+
+    # Remove cpt.txt file
+    if (Test-Path -Path $NBCLOC) {
+      Remove-Item $NBCLOC -Recurse -Force    
+    }
+    
     # Test if request for for 1 Project or more Project 
     if ($args.Length -eq 4) {
       $Project=$args[3]
@@ -229,7 +241,7 @@ else {
 
         $cpt=$($cpt -as [decimal]).ToString('N2')
       
-        Remove-Item $NBCLOC -Recurse -Force
+       
 
         Write-Host "`n-------------------------------------------------------------------------------------------------------"
         Write-Host  "`nThe maximum lines of code on the organization is : < $cpt > result in <global.txt>`n"
