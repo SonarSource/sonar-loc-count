@@ -16,7 +16,7 @@ Requirements:
 * [Git](https://git-scm.com/)
 * [curl](https://curl.haxx.se)
 * [jq](https://stedolan.github.io/jq/)
-* [cloc](https://github.com/AlDanial/cloc)
+* [cloc](https://github.com/AlDanial/cloc/releases/tag/v1.96)  installed v1.96
 * For Mac OSX you need gnu-sed (brew install gnu-sed)
 
 ## General usage
