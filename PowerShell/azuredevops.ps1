@@ -21,7 +21,7 @@ function Set-CultureWin([System.Globalization.CultureInfo] $culture) {
   [System.Threading.Thread]::CurrentThread.CurrentUICulture = $culture ; [System.Threading.Thread]::CurrentThread.CurrentCulture = $culture 
 } 
 
-# Set Variables CLOCBr (object: [NBR_LINE_CODE][BRANCHE_NAME]), cpt, NBCLOC, BaeAPI
+# Set Variables CLOCBr (object: [NBR_LINE_CODE][BRANCHE_NAME]), cpt, NBCLOC, BaseAPI
 #--------------------------------------------------------------------------------------#
 
 $CLOCBr=@([PSCustomObject]@{ })
