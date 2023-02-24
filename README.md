@@ -10,8 +10,6 @@ To exclude directories or files from the scan, you can insert the names of these
 > bootstrap
 > 
 > test
-> 
-> .css
 
 * [Installation](#installation)
 * [General usage](#general-usage)
