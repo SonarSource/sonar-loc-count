@@ -40,6 +40,7 @@ LISTF=""
 LIST=""
 NBCLOC="cpt.txt"
 cpt=0
+EXCLUDE=".clocignore"
 
 # Test if request for for 1 Project or more Project
 
@@ -91,8 +92,12 @@ do
             git clone https://$connectionToken@dev.azure.com/$org/$name1/_git/$RepoName --depth 1 --branch $BrancheNameF1 $NameFile
 
          # Run Analyse : run cloc on the local repository
+         if [ -s $EXCLUDE ]; then
+            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore)  --timeout 0
+         else
             cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --timeout 0
-    
+        fi
+           
          # Delete Directory projet
             /bin/rm -r $NameFile
        
@@ -151,12 +156,12 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-printf "The maximum lines of code on the Organization is : < %' .f > result in <global.txt>\n" "${cpt}"
+printf "The maximum lines of code on the Organization is : < %' .f > result in <Report_global.txt>\n" "${cpt}"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
-echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-printf "The maximum lines of code on the Organization is : < %' .f > result in <global.txt>\n" "${cpt}" >> global.txt
-echo -e "---------------------------------------------------------------------------------------------" >> global.txt
+echo -e "-------------------------------------------------------------------------------------------\n" > Report_global.txt
+printf "The maximum lines of code on the Organization is : < %' .f > result in <Report_global.txt>\n" "${cpt}" >> Report_global.txt
+echo -e "---------------------------------------------------------------------------------------------" >> Report_global.txt
 
 
 
