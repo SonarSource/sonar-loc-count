@@ -99,10 +99,10 @@ If you have more than 100 repos , you need to change Value of parameter page=Num
        Example for 150 repos :  GetAPI="/projects/$groupname1?per_page=100&page=2"
        
 ### Local Filesystem:
-Counts lines of code from a local directory or file.  This script only produces the LoC by language (.lang)
+Counts lines of code from a local directory or file. The script generates a report file : Report_**Name-of-Directory**.txt
 
 ```
-<filesystem.sh> PathToDirectoryorFile
+<filesystem.sh> PathToDirectory
 ```
 
 Contributions and feedbacks
