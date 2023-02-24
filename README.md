@@ -8,9 +8,7 @@ These scripts that connect to a DevOps platform must be run in a blank workspace
 To exclude directories or files from the scan, you can insert the names of these exclusions into the **.clocignore** file in the environment where you run the scripts. Example :
 
 > bootstrap
-
 > test
-
 > .css
 
 * [Installation](#installation)
