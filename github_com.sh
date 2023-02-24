@@ -41,6 +41,7 @@ LISTF=""
 LIST=""
 NBCLOC="cpt.txt"
 cpt=0
+EXCLUDE=".clocignore"
 
 # Test if request for for 1 Repo or more Repo
 
@@ -84,7 +85,11 @@ do
             git clone https://oauth2:${connectionToken}@$BaseAPI1/$org/$Name --depth 1 --branch $BrancheName $NameFile
 
              # Run Analyse : run cloc on the local repository
-             cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0
+             if [ -s $EXCLUDE ]; then
+               cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0
+             else
+                 cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0
+             fi    
     
             # Delete Directory projet
              /bin/rm -r $NameFile
@@ -143,9 +148,9 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}"
+printf "The maximum lines of code on the repository is : < %' .f > result in <Report_global.txt>\n" "${cpt}"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
-echo -e "-------------------------------------------------------------------------------------------\n" > global.txt
-printf "The maximum lines of code on the repository is : < %' .f > result in <global.txt>\n" "${cpt}" >> global.txt
-echo -e "---------------------------------------------------------------------------------------------" >> global.txt
+echo -e "-------------------------------------------------------------------------------------------\n" > Report_global.txt
+printf "The maximum lines of code on the repository is : < %' .f > result in <Report_global.txt>\n" "${cpt}" >> Report_global.txt
+echo -e "---------------------------------------------------------------------------------------------" >> Report_global.txt
