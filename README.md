@@ -2,9 +2,11 @@
 
 ## LoC Counting Scripts
 This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
+
 These scripts that connect to a DevOps platform must be run in a blank workspace (without data).
-To exclude directories or files from the scan, you can insert the names of these exclusions into the **.clocignore** file in the environment where you run the scripts. 
-Example :
+
+To exclude directories or files from the scan, you can insert the names of these exclusions into the **.clocignore** file in the environment where you run the scripts. Example :
+
 bootstrap
 test
 .css
