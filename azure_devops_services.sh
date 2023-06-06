@@ -78,7 +78,7 @@ do
          echo -e "   Repository Name : $RepoName id : $RepoID"
   
           # Get List of Branches
-          curl -s -u :$connectionToken "$BaseAPI/$org/$Name/_apis/git/repositories/$RepoID/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
+          curl -s -u :$connectionToken "$BaseAPI/$org/$name1/_apis/git/repositories/$RepoID/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
           do
              # Get Branche Name without path reference
             BrancheNameF1=` echo $BrancheName|$SED s/'refs\/heads\/'/''/g`
@@ -93,9 +93,9 @@ do
 
          # Run Analyse : run cloc on the local repository
          if [ -s $EXCLUDE ]; then
-            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore)  --timeout 0
+            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore)  --timeout 0 --sum-one
          else
-            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --timeout 0
+            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${LISTF} --timeout 0 --sum-one
         fi
            
          # Delete Directory projet
