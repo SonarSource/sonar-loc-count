@@ -14,9 +14,9 @@ base="$(basename $dir)"
 echo "Counting $dir"
 
 if [ -s $EXCLUDE ]; then
- cloc --force-lang-def=sonar-lang-defs.txt --report-file=Report_$base.txt --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 $dir 
+ cloc --force-lang-def=sonar-lang-defs.txt --report-file=Report_$base.txt --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one $dir 
 else
- cloc --force-lang-def=sonar-lang-defs.txt --report-file=Report_$base.txt --timeout 0 $dir 
+ cloc --force-lang-def=sonar-lang-defs.txt --report-file=Report_$base.txt --timeout 0 --sum-one $dir 
 fi
 
 exit 0;
