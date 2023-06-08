@@ -26,7 +26,7 @@ else {
         if((Test-Path $CLOCPATH) || (Test-Path ($CLOCPATH+".exe"))) {
             $repname=Split-Path -Path $args[0] -Leaf
              # Run Analyse : run cloc on the local repository
-            $cmdparms2="--force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file="+$repname +".cloc " + $directory
+            $cmdparms2="--force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file="+$repname +".cloc " + $directory + " --sum-one"
             $cmdline2=$CLOCPATH + " " + $cmdparms2
             Write-Host "Analyse Counting ${directory}"
             Invoke-Expression -Command $cmdline2
