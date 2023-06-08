@@ -120,7 +120,7 @@ else {
 
           # Run Analyse : run cloc on the local repository
           Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
-          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0"
+          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0 --sum-one"
           $cmdline2=$CLOCPATH + " " + $cmdparms2
           Invoke-Expression -Command $cmdline2
 
