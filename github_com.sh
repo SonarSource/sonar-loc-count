@@ -13,7 +13,12 @@
 #                                                                          #
 #                                                                          #
 #  @author Emmanuel COLUSSI                                                #
-#  @version 1.01                                                           #
+#  @version 1.02                                                           #
+#                                                                          #
+# Fix isssues                                                              #
+#  - If the repository is archived, it will not be analyzed.               #
+#  - Pagination issue when over 100 repositories                           #
+#  Thanks to @gabrielsoltz for solving these issues and creating a PR      #
 #                                                                          #
 #**************************************************************************#
 
