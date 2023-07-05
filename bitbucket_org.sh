@@ -71,31 +71,51 @@ do
     # Replace space by %20 in Repository name for Repository URL
     name1=` echo $Name|$SED s/' '/'%20'/g`
 
-    curl -s -u $user:$connectionToken $BaseAPI/repositories/$wks/$Name/refs/branches | jq -r '.values[].name' | while read -r BrancheName ;
+    nextUrl="${BaseAPI}/repositories/$wks/$Name/refs/branches"
+    while [ ! -z $nextUrl ]
     do
-        # Get Branche Name without path reference
-        BrancheNameF1=` echo $BrancheName|$SED s/'refs\/heads\/'/''/g`
-        # Replace / by - in Branche Name for created local file
-        BrancheNameF=` echo $BrancheNameF1|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
-
-        LISTF="${NameFile}_${BrancheNameF}.cloc"
-        echo -e "\n       Branche Name : $BrancheNameF1\n"
-
-        # Create Commad Git clone 
-        git clone  https://$user:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
-
-        # Run Analyse : run cloc on the local repository
-        if [ -s $EXCLUDE ]; then
-          cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one
+        branchesJson=$(curl -s -u $user:$connectionToken $nextUrl)
+        
+        if [ -z ${5} ]; then
+            nextUrl=$(echo $branchesJson | jq -r ".next")
         else
-           cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
-        fi   
-    
-        # Delete Directory projet
-        /bin/rm -r $NameFile
-       
-        $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
+            unset nextUrl
+        fi
+        
+        echo $branchesJson | jq -r '.values[].name' | while read -r BrancheName ;
+        do
+            if [ ! -z ${5} ]; then
+                BrancheName="${5}"
+            fi
+            
+            # Get Branche Name without path reference
+            BrancheNameF1=$(echo $BrancheName|$SED s/'refs\/heads\/'/''/g)
+            # Replace / by - in Branche Name for created local file
+            BrancheNameF=$(echo $BrancheNameF1|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g)
 
+            LISTF="${NameFile}_${BrancheNameF}.cloc"
+            
+            echo -e "\n       Branche Name : $BrancheNameF1\n"
+
+            # Create Commad Git clone 
+            git clone  https://$user:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
+
+            # Run Analyse : run cloc on the local repository
+            if [ -s $EXCLUDE ]; then
+              cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one
+            else
+               cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
+            fi   
+        
+            # Delete Directory projet
+            /bin/rm -r $NameFile
+           
+            $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
+
+            if [ ! -z ${5} ]; then
+                break
+            fi
+        done
     done
      # Generate reports
 
