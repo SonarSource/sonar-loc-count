@@ -47,13 +47,13 @@ azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe MyProjectNam
 Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<github_com.ps1> <user> <token> <organization> <PATH for cloc binary>
-./github_com.ps1 myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
+<github_com.ps1> <token> <organization> <PATH for cloc binary>
+./github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
-<github_com.ps1> <user> <token> <organization> <PATH for cloc binary> <MyRepoName>
-./github_com.ps1 myuser 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
+<github_com.ps1> <token> <organization> <PATH for cloc binary> <MyRepoName>
+./github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
 ```
 
 ### [Gitlab.com](https://gitlab.com):
