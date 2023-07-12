@@ -35,12 +35,12 @@ The script generates a report per project(File : ***ProjectName.txt***) that ind
 
 ```
 <azuredevops.ps1> <token> <organization> <PATH for cloc binary>
-a./azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe
+.\azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
 <azuredevops.ps1> <token> <organization> <MyProjectName>
-azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe MyProjectName
+.\azuredevops.ps1 1234567890abcdefgh myADOOrg $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
 ### [github.com](https://github.com):
 
@@ -48,12 +48,12 @@ Counts lines of code from a GitHub.com organization.  Requires to pass username,
 
 ```
 <github_com.ps1> <token> <organization> <PATH for cloc binary>
-./github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
+.\github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
 <github_com.ps1> <token> <organization> <PATH for cloc binary> <MyRepoName>
-./github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
+.\github_com.ps1 1234567890abcdefgh myGitHubDotComOrg $HOME_CLOC/bin/cloc.exe MyRepoName
 ```
 
 ### [Gitlab.com](https://gitlab.com):
@@ -62,12 +62,12 @@ Counts lines of code from a GitLab.com Group or Project. Requires to pass [perso
 
 ```
 <gitlab_com.ps1> <token> <groupName> <PATH for cloc binary>
-./gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName $HOME_CLOC/bin/cloc.exe
+.\gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
 <gitlab_com.ps1> <token> <groupName//MyProjectName> <PATH for cloc binary> 
-./gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
+.\gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
 ```
        
 ### [bitbucket.org](https://bitbucket.org):
@@ -76,11 +76,11 @@ Counts lines of code from a Bitbucket.org organization. Requires to pass usernam
 
 ```
 <bitbucket_org.ps1> <user> <PassordToken> <myWorkspace> <PATH for cloc binary>
-./bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
+.\bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
 ```
 or
 ```
 <bitbucket_org.ps1> <user> <PassordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
-./bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
+.\bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
 ```
 
