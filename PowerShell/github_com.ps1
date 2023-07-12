@@ -24,6 +24,8 @@ $NBCLOC="cpt.txt"
 $cpt=0
 $BaseAPI="https://api.github.com"
 
+
+
 if ($args.Length -lt 3) {
   Write-Output ('Usage: github_com.ps1 <token> <org> <PATH for cloc binary> optional <projects>')
 } 
@@ -41,7 +43,6 @@ else {
       $Project=$args[3]
       $GetAPI="repos/$organization/$Project"     
     } else {
-
       $GetAPI="orgs/$organization/repos"
     }
 
@@ -120,7 +121,7 @@ else {
 
           # Run Analyse : run cloc on the local repository
           Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
-          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0 --sum-one"
+          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0"
           $cmdline2=$CLOCPATH + " " + $cmdparms2
           Invoke-Expression -Command $cmdline2
 
