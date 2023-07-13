@@ -55,10 +55,10 @@ else {
       # Get List of Repositories
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      $NumberRepositories=$Repo.count 
+      $NumberRepositories= @($Repo).count
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
-
+      
 
       # Parse Repositories
       #--------------------------------------------------------------------------------------#
@@ -92,10 +92,10 @@ else {
               # Write-Host $_.ErrorDetails.Message
             } else {
               # Get Number of Branches
-               $NumberBranch=$Branch.count
+               $NumberBranch=@($Branch).count
             }
          }
-        $NumberBranch=$Branch.count
+        $NumberBranch=@($Branch).count
      
         # Parse Repositories/Branches 
         #--------------------------------------------------------------------------------------#
@@ -109,22 +109,24 @@ else {
           # Clone Repository locally
           Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
           $remoteUrl="https://oauth2:${connectionToken}@github.com/${organization}/${RepoName}"
-        
+       
           # Create Commad Git clone and replace space by %20
           $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
 
           if (Test-Path -Path $RepoName2) {
-             Remove-Item $RepoName2 -Recurse -Force
+           Remove-Item $RepoName2 -Recurse -Force
           } else {}
           $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2 
           Invoke-Expression -Command $cmdline0  
 
+        
+
           # Run Analyse : run cloc on the local repository
           Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
-          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0"
+          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName2}_${BrancheName}.cloc --timeout 0"
           $cmdline2=$CLOCPATH + " " + $cmdparms2
           Invoke-Expression -Command $cmdline2
-
+          
           If ( -not (Test-Path -Path ${RepoName2}_${BrancheName}.cloc) )  {
             "0 Files Analyse in ${RepoName2}/${BrancheName}" | Out-File ${RepoName2}_${BrancheName}.cloc
           }
@@ -177,8 +179,10 @@ else {
         }
 
         $cpt=$($cpt -as [decimal]).ToString('N2')
+     
       
         Remove-Item $NBCLOC -Recurse -Force
+     
 
         Write-Host "`n-------------------------------------------------------------------------------------------------------"
         Write-Host  "`nThe maximum lines of code on the organization is : < $cpt > result in <global.txt>`n"
@@ -190,6 +194,7 @@ else {
        "-------------------------------------------------------------------------------------------------------" | Out-File -Append global.txt
       }
       #--------------------------------------------------------------------------------------#
+
 
     }    
     else {
