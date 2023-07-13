@@ -57,7 +57,7 @@ else {
       # Get List of Repositories
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      if ($args.Length -eq 5) { $NumberRepositories=$Repo.count }
+      if ($args.Length -eq 5) { $NumberRepositories=@($Repo).count }
       else { $NumberRepositories=$Repo.value.count }
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"

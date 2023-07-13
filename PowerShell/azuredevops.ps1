@@ -65,7 +65,7 @@ else {
       # Get List of Project
       $Projects = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      if ($args.Length -eq 4) { $NumberProjects= $Projects.count }
+      if ($args.Length -eq 4) { $NumberProjects= @($Projects).count }
       else { $NumberProjects= $Projects.value.count }
 
        Write-Host "`n Number of Project : ${NumberProjects} for Organization : $organization`n"

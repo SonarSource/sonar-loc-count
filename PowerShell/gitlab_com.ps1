@@ -61,7 +61,7 @@ else {
       # Get List of Repositories
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
-      $NumberRepositories=$Repo.count 
+      $NumberRepositories=@($Repo).count
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
       
@@ -99,10 +99,10 @@ else {
               # Write-Host $_.ErrorDetails.Message
             } else {
               # Get Number of Branches
-               $NumberBranch=$Branch.count
+               $NumberBranch=@($Branch).count
             }
          }
-        $NumberBranch=$Branch.count
+        $NumberBranch=@($Branch).count
      
         # Parse Repositories/Branches 
         #--------------------------------------------------------------------------------------#
