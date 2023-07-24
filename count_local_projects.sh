@@ -25,7 +25,7 @@ if [ $# -ne 1 ]; then
 fi
 nbDays=$1
 # replace with gtouch on MacOS (coreutils needed)
-gtouch -d "$nbDays days ago" $nbDays.ago
+touch -d "$nbDays days ago" $nbDays.ago
 
 
 
