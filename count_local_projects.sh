@@ -6,10 +6,10 @@
 #  @package     :                                                          #
 #  @subpackage  : None                                                     #
 #  @access      :                                                          #
-#  @paramtype   : None                                                     #
-#  @argument    :                                                          #
+#  @paramtype   : Number of days to filter out inactive projects           #
+#  @argument    : max-age-in-days                                                         #
 #  @description : Get Number ligne of Code from sub-folders, 1 per project #
-#  @usage : ./ ount_local_projects.sh                                      #                                                              
+#  @usage : ./count_local_projects.sh <nbDays>                               #                                                              
 #                                                                          #
 #                                                                          #
 #  @author Sylvain Combe                                                   #
@@ -19,10 +19,15 @@
 #**************************************************************************#
 
 
-if [ $# -ne 0 ]; then
-    echo "Usage: `basename $0`"
+if [ $# -ne 1 ]; then
+    echo "Usage: `basename $0` <nbDays>"
     exit
 fi
+nbDays=$1
+# replace with gtouch on MacOS (coreutils needed)
+gtouch -d "$nbDays days ago" $nbDays.ago
+
+
 
 # Set Variables user,token,org,BaseAPI
 #--------------------------------------------------------------------------------------#
@@ -44,6 +49,11 @@ EXCLUDE=".clocignore"
 
 for file in */ ; do 
   if [[ -d "$file" ]]; then
+    if [ $file -ot "$nbDays.ago" ]; then
+      echo -e "Repo $file not commited to on its main branch since more than $nbDays"; 
+      continue;
+    fi
+
     file="${file%/}"
     LISTF="$file.cloc"
     echo -e "Counting LOCs from the $file directory in $LISTF";
@@ -51,11 +61,21 @@ for file in */ ; do
 
     # Run Analyse : run cloc on the local repository
     if [ -s $EXCLUDE ]; then
-      cloc $file --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one 
+      cloc $file --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one --ignored=${LISTF}.ignored
     else
       cloc $file --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
     fi
   fi; 
 done
 
-cloc --force-lang-def=sonar-lang-defs.txt  --sum-reports *.cloc
+echo -e "$0 $@"  > general-script-output.txt
+echo -e "#######################" >> general-script-output.txt
+cloc --force-lang-def=sonar-lang-defs.txt  --sum-reports *.cloc >> general-script-output.txt
+cat general-script-output.txt
+
+if [[ ! -d "outputs" ]]; then
+  mkdir outputs
+fi
+mv *.cloc outputs
+mv $nbDays.ago outputs
+mv general-script-output.txt outputs
