@@ -16,9 +16,10 @@
 #**************************************************************************************************#
 
 $BaseAPI="https://api.github.com"
+$LangDefFile="sonar-lang-defs.txt"
 
 if ($args.Length -lt 3) {
-  Write-Output ('Usage: github_com.ps1 <token> <org> <Full PATH for cloc binary>')
+  Write-Output ('Usage: github_com.ps1 <token> <org> <Absolute PATH to cloc binary>')
 } 
 else {
     $connectionToken=$args[0]
@@ -70,9 +71,9 @@ else {
         $cmdline0=" git clone '" + $remoteUrl.replace(" ","%20") + "' --depth 1 " + $RepoName2 
         Invoke-Expression -Command $cmdline0  
 
-        # Run cloc on the local repository - output to REPONAM.cloc
+        # Run cloc on the local repository - output to REPONAME.cloc
         Write-Host "Counting ${RepoName}"
-        $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName2}.cloc --timeout 0"
+        $cmdparms2="${RepoName2} --force-lang-def=${LangDefFile} --ignore-case-ext --report-file=${RepoName2}.cloc --timeout 0"
         $cmdline2=$CLOCPATH + " " + $cmdparms2
         Invoke-Expression -Command $cmdline2
         
@@ -84,7 +85,7 @@ else {
       }
   
       #Run Summary report to generate .file and .land totals
-      $cmdline3=$CLOCPATH + " --sum-reports --force-lang-def=sonar-lang-defs.txt --report-file=${organization} *.cloc"
+      $cmdline3=$CLOCPATH + " --sum-reports --force-lang-def=${LangDefFile} --report-file=${organization} *.cloc"
       Invoke-Expression -Command $cmdline3
 
       #Clean up cloc files
