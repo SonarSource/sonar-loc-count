@@ -44,7 +44,7 @@ or
 ```
 ### [github.com](https://github.com):
 
-Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
+Counts lines of code from a GitHub.com organization.  Requires to pass username, [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) and the organization.  The token must have repo scope.  The script generates a report that lists the count per repository (File : ***OrgName.file***), as well as a report that lists the count by language (File : ***OrgName.lang***).
 
 ```
 <github_com.ps1> <token> <organization> <PATH for cloc binary>
