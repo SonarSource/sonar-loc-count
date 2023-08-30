@@ -32,15 +32,7 @@ BaseAPI="https://dev.azure.com"
 
 #--------------------------------------------------------------------------------------#
 
-# If you use mac osx you have to install the gnu-sed (brew install gnu-sed) then you set in the scripts the variable SED. SED=gsed
-# For linux SED=sed
-SED="sed"
-i=1
-LISTF=""
-LIST=""
-NBCLOC="cpt.txt"
-cpt=0
-EXCLUDE=".clocignore"
+source ./set_common_variables.sh
 
 # Test if request for for 1 Project or more Project
 

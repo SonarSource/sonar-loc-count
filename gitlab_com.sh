@@ -38,15 +38,7 @@ fi
 BaseAPI="https://gitlab.com/api/v4"
 #--------------------------------------------------------------------------------------#
 
-# If you use mac osx you have to install the gnu-sed (brew install gnu-sed) then you set in the scripts the variable SED. SED=gsed
-# For linux SED=sed
-SED="sed"
-i=1
-LISTF=""
-LIST=""
-NBCLOC="cpt.txt"
-cpt=0
-EXCLUDE=".clocignore"
+source ./set_common_variables.sh
 
 # Test if request for for 1 Project or more Project in GroupName
      # If you have more than 100 repos Change Value of parameter page=Number_of_page

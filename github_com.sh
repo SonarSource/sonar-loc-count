@@ -38,15 +38,8 @@ BaseAPI="https://api.github.com"
 
 #--------------------------------------------------------------------------------------#
 
-# If you use mac osx you have to install the gnu-sed (brew install gnu-sed) then you set in the scripts the variable SED. SED=gsed
-# For linux SED=sed
-SED="gsed"
-i=1
-LISTF=""
-LIST=""
-NBCLOC="cpt.txt"
-cpt=0
-EXCLUDE=".clocignore"
+source ./set_common_variables.sh
+
 
 # Test if request for 1 Repo or more Repo
 
