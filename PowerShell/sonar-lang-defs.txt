@@ -16,7 +16,6 @@ C
     filter rm_comments_in_strings " // 
     filter call_regexp_common C++
     extension c
-    extension C
     3rd_gen_scale 0.77
     end_of_line_continuation \\$
 C#
@@ -31,7 +30,6 @@ C++
     filter rm_comments_in_strings " // 
     filter call_regexp_common C++
     extension cpp
-    extension CPP
     extension cc
     extension cxx
     extension c++
@@ -41,7 +39,6 @@ C/C++ Header
     filter rm_comments_in_strings " /* */
     filter rm_comments_in_strings " // 
     filter call_regexp_common C++
-    extension H
     extension h
     extension hh
     extension hpp
@@ -54,9 +51,7 @@ COBOL
     filter remove_cobol_comments
     extension CBL
     extension COB
-    extension cbl
     extension ccp
-    extension cob
     extension cobol
     extension cpy
     3rd_gen_scale 1.04
@@ -216,7 +211,6 @@ SQL
     filter call_regexp_common C
     filter remove_matches ^\s*--
     filter remove_inline --.*$
-    extension SQL
     extension sql
     3rd_gen_scale 2.29
 Scala
@@ -254,7 +248,6 @@ Visual Basic .NET
     filter remove_above ^\s*Attribute\s+VB_Name\s+=
     filter remove_matches ^\s*Attribute\s+
     filter remove_matches ^\s*\47
-    extension VB
     extension vb
     3rd_gen_scale 2.76
 Vuejs Component
@@ -273,11 +266,8 @@ XHTML
 XML
     filter remove_html_comments
     filter call_regexp_common HTML
-    extension XML
     extension xml
-    extension XSD
     extension xsd
-    extension XSL
     extension xsl
     3rd_gen_scale 1.90
 YAML
