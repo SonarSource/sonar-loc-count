@@ -23,16 +23,18 @@ function Set-CultureWin([System.Globalization.CultureInfo] $culture) {
 
 function Remove-Files {
   param (
-    [string]$Path
+    [string[]]$Paths
   )
   
-  Write-Host "Remote-Files"
+  Write-Host "Remove-Files"
 
-  if (Test-Path -Path $Path) {
-    Write-Host "`nRemove item : ${Path}"
-    Remove-Item $Path -Recurse -Force
-  } else {
-    Write-Host "`nCant remove item : ${Path}"
+  foreach ($Path in $Paths) { 
+    if (Test-Path -Path $Path) {
+      Write-Host "`nRemove item : ${Path}"
+      Remove-Item $Path -Recurse -Force
+    } else {
+      Write-Host "`nCant remove item : ${Path}"
+    }
   }
 }
 
@@ -58,9 +60,6 @@ if ($args.Length -lt 3) {
 
   # Remove cpt.txt file
   Remove-Files $NIBLOC
-  #if (Test-Path -Path $NBCLOC) {
-  #  Remove-Item $NBCLOC -Recurse -Force    
-  #}
     
   # Test if request for for 1 Project or more Project 
   if ($args.Length -eq 4) {
@@ -180,15 +179,8 @@ if ($args.Length -lt 3) {
             $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
 
             Remove-Files $RepoName2
-            # temp remote-repo
-            #if (Test-Path -Path $RepoName2) {
-            #  Write-Host "`nRemove item : ${RepoName2}"
-            #  Remove-Item $RepoName2 -Recurse -Force
-            #} else {
-            #  Write-Host "`nCant remove item : ${RepoName2}"
-            #}
 
-            # fix : filename too long
+            # BugFix : filename too long
             $cmdline0="git clone -c core.longpaths=true '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchPathName + "' " + $RepoName2
             Invoke-Expression -Command $cmdline0  
 
@@ -200,11 +192,9 @@ if ($args.Length -lt 3) {
 
             if ( -not (Test-Path -Path ${RepoName2}_${BranchName}.cloc) )  {
               "0 Files Analyse in ${RepoName2}/${BranchName}" | Out-File ${RepoName2}_${BranchName}.cloc
+
+              # Nothing to do remove folder
               Remove-Files RepoName2
-              #if (Test-Path -Path $RepoName2) {
-              #  Write-Host "`nRemoving local Repo : ${RepoName2}"
-              #  Remove-Item $RepoName2 -Recurse -Force
-              #}
             }
 
             # Generate report
@@ -213,7 +203,7 @@ if ($args.Length -lt 3) {
           }   
           #--------------------------------------------------------------------------------------#
         } else { 
-          Write-Host "`nRepository has no branch`n" 
+          Write-Host "Repository has no branch`n" 
         }
       }
       #--------------------------------------------------------------------------------------#
@@ -239,17 +229,15 @@ if ($args.Length -lt 3) {
       Write-Host "branchmax: ${branchmax}"
 
       if ($NumberBranch -gt 0) {
+        Write-Host "Remove repository - ${NumberBranch}"
+
+        # Remove local repo 
         Remove-Files $RepoName
-        # Remove local repos
-        #if (Test-Path -Path $RepoName2) {
-        #  Write-Host "`nRemoving local Repo : ${RepoName2}"
-        #  Remove-Item $RepoName2 -Recurse -Force
-        #} else {
-        #  Write-Host "Cant remove repo : ${RepoName}"
-        #}
         
         # Reset object
         $CLOCBr=@([PSCustomObject]@{ })
+      } else {
+        Write-Host "No no no - ${NumberBranch}"
       }
 
       Write-Host "Branch number: ${NumberBranch}"
