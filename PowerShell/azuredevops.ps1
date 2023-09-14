@@ -152,33 +152,30 @@ if ($args.Length -lt 3) {
             $BranchList = $Branch.value[$z].name.Split("/")
             $BranchName = $BranchList[$BranchList.count -1 ]
 
-            $BranchNames = 'main', 'master'
-            if($BranchNames -contains $BranchName) {
+            # Clone Repository locally
+            $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${ProjectName}/_git/${RepoName}"
+            # Create Commad Git clone and replace space by %20
+            $RepoName=$RepoName.replace(" ","_").replace("/","_") 
+            
+            # BugFix : filename too long
+            $cmdline = "git clone -c core.longpaths=true '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchPathName + "' " + $RepoName
+            Invoke-Expression -Command $cmdline
 
-              # Clone Repository locally
-              $remoteUrl="https://${connectionToken}@dev.azure.com/${organization}/${ProjectName}/_git/${RepoName}"
-              # Create Commad Git clone and replace space by %20
-              $RepoName=$RepoName.replace(" ","_").replace("/","_") 
-              # BugFix : filename too long
-              $cmdline = "git clone -c core.longpaths=true '" + $remoteUrl.replace(" ","%20") + "' --depth 1 --branch '" + $BranchPathName + "' " + $RepoName
-              Invoke-Expression -Command $cmdline
+            # Run Analyse : run cloc on the local repository
+            Write-Host "`nAnalyse branch ${RepoName}/${BranchName}"
+            $cmdparms="${RepoName} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName}_${BranchName}.cloc  --timeout 0 --sum-one"
 
-              # Run Analyse : run cloc on the local repository
-              Write-Host "`nAnalyse branch ${RepoName}/${BranchName}"
-              $cmdparms="${RepoName} --force-lang-def=sonar-lang-defs.txt --ignore-case-ext --report-file=${RepoName}_${BranchName}.cloc  --timeout 0 --sum-one"
-
-              $cmdline = $CLOCPATH + " " + $cmdparms
-              Invoke-Expression -Command $cmdline
-              if ( -not (Test-Path -Path ${RepoName}_${BranchName}.cloc) )  {
-                "0 Files Analyse in ${RepoName}/${BranchName}" | Out-File ${RepoName}_${BranchName}.cloc
-              }
-
-              "Result Analyse Counting ${RepoName} / ${BranchName}" | Out-File -Append "Report_${RepoName}.txt"
-              Get-Content ${RepoName}_${BranchName}.cloc | Out-File -Append "Report_${RepoName}.txt"
-              
-              # Remove local repo
-              Remove-Files $RepoName
+            $cmdline = $CLOCPATH + " " + $cmdparms
+            Invoke-Expression -Command $cmdline
+            if ( -not (Test-Path -Path ${RepoName}_${BranchName}.cloc) )  {
+              "0 Files Analyse in ${RepoName}/${BranchName}" | Out-File ${RepoName}_${BranchName}.cloc
             }
+
+            "Result Analyse Counting ${RepoName} / ${BranchName}" | Out-File -Append "Report_${RepoName}.txt"
+            Get-Content ${RepoName}_${BranchName}.cloc | Out-File -Append "Report_${RepoName}.txt"
+            
+            # Remove local repo
+            Remove-Files $RepoName
           }   
         }
       }
