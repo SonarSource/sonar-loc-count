@@ -42,10 +42,6 @@ or
 <github_com.sh> <user> <token> <organization> <MyRepoName>
 github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName
 ```
-If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 53
-
-       1 Page = 100 repos max
-       Example for 150 repos : GetAPI="orgs/$org/repos?per_page=100&page=2"
 
 ### [bitbucket.org](https://bitbucket.org):
 Counts lines of code from a Bitbucket.org organization. Requires to pass username, [App token password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug.  The token must have Repositories Read permissions.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
