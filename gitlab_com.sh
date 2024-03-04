@@ -56,7 +56,7 @@ fi
 
 
 # Get List of Repositories : get Name , ID and http_url_to_repo
-curl -s -u $connectionToken: $BaseAPI$GetAPI|jq -r ''"${jq_args}"''| while IFS=: read -r Name ID Repourl;
+curl --header "PRIVATE-TOKEN: $connectionToken" $BaseAPI$GetAPI|jq -r ''"${jq_args}"''| while IFS=: read -r Name ID Repourl;
 
 do
   echo "-----------------------------------------------------------------"
@@ -66,7 +66,7 @@ do
    # Replace space by - in Repository name for created local file
    NameFile=` echo $Name|$SED s/' '/'-'/g`
 
-   curl -s -u $connectionToken: $BaseAPI/projects/$ID/repository/branches | jq -r '.[].name' | while read -r BrancheName ;
+   curl  --header "PRIVATE-TOKEN: $connectionToken" $BaseAPI/projects/$ID/repository/branches | jq -r '.[].name' | while read -r BrancheName ;
     do
         # Replace / or space by - in Branche Name for created local file
         BrancheNameF=` echo $BrancheName|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
