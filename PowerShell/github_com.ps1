@@ -10,7 +10,7 @@
 #  @usage : ./github_com.ps1 <token> <org> <PATH for cloc binary>                                  #                                                              
 #                                                                                                  #
 #                                                                                                  #
-#  @author Emmanuel COLUSSI                                                                        #
+#                                                                         #
 #  @version 1.02                                                                                   #
 #                                                                                                  #
 #**************************************************************************************************#
