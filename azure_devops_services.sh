@@ -12,7 +12,7 @@
 #  @usage : ./azuredevops.sh <token> <organization> and optional <Project> #                                                              
 #                                                                          #
 #                                                                          #
-#  @author Emmanuel COLUSSI                                                #
+#                                                                          #
 #  @version 1.02                                                           #
 #                                                                          #
 #**************************************************************************#
