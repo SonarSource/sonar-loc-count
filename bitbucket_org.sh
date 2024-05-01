@@ -12,7 +12,7 @@
 #  @usage : ./bitbucket_org.sh <user> <token> <workspace> and optional <repoName>   #                                                              
 #                                                                                   #
 #                                                                                   #
-#  @author Emmanuel COLUSSI                                                         #
+#                                                                                   #
 #  @version 1.01                                                                    #
 #                                                                                   #
 #***********************************************************************************#
