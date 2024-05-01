@@ -10,7 +10,7 @@
 #  @usage : ./azuredevops.ps1 <token> <org> <PATH for cloc binary> and optional <projects> #                                                              
 #                                                                                          #
 #                                                                                          #
-#  @author Emmanuel COLUSSI                                                                #
+#                                                                 #
 #  @version 1.03                                                                           #
 #                                                                                          #
 #******************************************************************************************#
