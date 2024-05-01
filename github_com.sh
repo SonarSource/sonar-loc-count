@@ -12,7 +12,7 @@
 #  @usage : ./github_com.sh <token> <org> and optional <repoName>          #                                                              
 #                                                                          #
 #                                                                          #
-#  @author Emmanuel COLUSSI                                                #
+#                                                                          #
 #  @version 1.02                                                           #
 #                                                                          #
 # Fix isssues                                                              #
