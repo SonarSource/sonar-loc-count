@@ -12,7 +12,7 @@
 #  @usage : ./gitlab_com.sh <token> <groupName>                            #                                                              
 #                                                                          #
 #                                                                          #
-#  @author Emmanuel COLUSSI                                                #
+#                                                                          #
 #  @version 1.01                                                           #
 #                                                                          #
 #**************************************************************************#
