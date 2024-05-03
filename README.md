@@ -1,5 +1,7 @@
 ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
+❗️ A new code update is now available for the DevOps platforms Bitbucket Cloud and Bitbucket Data Center. Stay tuned for forthcoming support for other platforms. You can find the link to the update [here](https://github.com/emmanuel-colussi-sonarsource/sonar-golc).
+
 ## LoC Counting Scripts
 This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories.These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
 
