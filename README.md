@@ -75,6 +75,22 @@ or
 azure_devops_services.sh 1234567890abcdefgh myADOOrg MyProjectName
 ```
 
+### [Azure DevOps Server (On-premise)](https://azure.microsoft.com/en-us/products/devops/server/):
+
+Counts lines of code from an Azure DevOps Server (on-premise) collection. Requires the **server URL** (e.g., `http://your-server/tfs`), the **collection name**, and a [personal access token](https://www.google.com/search?q=https://docs.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate%3Fview%3Dazure-devops-server-2022). The token must have **Code \> Read** permissions. The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and the branch with the highest LoC. It also creates a ***Report\_global.txt*** file summarizing the maximum line of code on the collection.
+
+```
+<azure_devops_onprem.sh> <server_url> <collection> <token>
+azure_devops_onprem.sh http://tfs-server/tfs DefaultCollection 1234567890abcdefgh
+```
+
+or
+
+```
+<azure_devops_onprem.sh> <server_url> <collection> <token> <MyProjectName>
+azure_devops_onprem.sh http://tfs-server/tfs DefaultCollection 1234567890abcdefgh MyProjectName
+```
+
 ### [Gitlab.com](https://gitlab.com):
 Counts lines of code from a GitLab.com Group or Project. Requires to pass [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes.The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
 
