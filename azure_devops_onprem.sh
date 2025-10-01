@@ -14,7 +14,7 @@
 #  Example:                                                                #
 #  ./azuredevops_onprem.sh http://your-tfs-server:8080/tfs DefaultCollection yourPAT #
 #                                                                          #
-#  @version 1.03                                                           #
+#  @version 1.04                                                           #
 #                                                                          #
 #**************************************************************************#
 
@@ -55,7 +55,7 @@ else
 fi
 
 #  Parse Projects
-curl -s -u :$connectionToken "${GetAPIURL}" | jq -r ''"${jq_args}"''| while IFS=: read -r Name ID;
+curl -s -k -u :$connectionToken "${GetAPIURL}" | jq -r ''"${jq_args}"''| while IFS=: read -r Name ID;
 
 do
     echo "--------------------------------------------------------------------------------------------"
@@ -69,7 +69,7 @@ do
 
     #  Parse Project : Get Repositories
     repo_jq_args=".value[] | \"\(.name):\(.id)\""
-    curl -s -u :$connectionToken "${BaseAPI}/${name1}/_apis/git/repositories?api-version=7.0" | jq -r ''"${repo_jq_args}"'' | while IFS=: read -r RepoName RepoID;
+    curl -s -k -u :$connectionToken "${BaseAPI}/${name1}/_apis/git/repositories?api-version=7.0" | jq -r ''"${repo_jq_args}"'' | while IFS=: read -r RepoName RepoID;
     do
         # Replace '/' and ' ' with '-' in Repo Name for local file names
         RepoNameF=$(echo "$RepoName" | $SED 's/\//-/g' | $SED 's/ /-/g')
@@ -77,8 +77,10 @@ do
          echo "--------------------------------------------------------------------------------------------"
          echo -e "   Repository Name : $RepoName id : $RepoID"
 
+echo "curl -s -k -u :$connectionToken \"${BaseAPI}/${name1}/_apis/git/repositories/${RepoName}/refs?filter=heads/&api-version=7.0\""
+
           # Get List of Branches
-          curl -s -u :$connectionToken "${BaseAPI}/${name1}/_apis/git/repositories/${RepoID}/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
+          curl -s -k -u :$connectionToken "${BaseAPI}/${name1}/_apis/git/repositories/${RepoName}/refs?filter=heads/&api-version=7.0" | jq -r '.value[].name' | while read -r BrancheName ;
           do
              # Get clean Branch Name (without 'refs/heads/')
             BrancheNameF1=$(echo "$BrancheName" | $SED 's/refs\/heads\///g')
@@ -88,11 +90,19 @@ do
             LISTF="${NameFile}_${BrancheNameF}.cloc"
             echo -e "\n       Branch Name : $BrancheNameF1\n"
 
+            
             # Construct the git clone URL for on-premise with embedded PAT for authentication
-            CLONE_URL="${protocol}${connectionToken}@${url_part}/${name1}/_git/${RepoName}"
+            CLONE_URL="${protocol}${url_part}/${name1}/_git/${RepoName}"
+
+            TOKEN=$(echo -n "syncuser:${connectionToken}" | base64 --wrap=0)
+
+            echo "TOKEN: $TOKEN"
+
+          echo "git clone -c http.extraheader=\"AUTHORIZATION: Basic ${TOKEN}\" \"${CLONE_URL}\" --depth 1 --branch \"$BrancheNameF1\" \"$NameFile\""
+
 
             # Create Command Git clone
-            git clone "${CLONE_URL}" --depth 1 --branch "$BrancheNameF1" "$NameFile"
+            git clone -c http.extraheader="AUTHORIZATION: Basic ${TOKEN}" "${CLONE_URL}" --depth 1 --branch "$BrancheNameF1" "$NameFile"
 
              # Run Analyse : run cloc on the local repository
              if [ -s "$EXCLUDE" ]; then
