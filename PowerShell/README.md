@@ -69,6 +69,20 @@ or
 <gitlab_com.ps1> <token> <groupName//MyProjectName> <PATH for cloc binary> 
 .\gitlab_com.ps1 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
 ```
+
+### GitLab On-Premise:
+
+Counts lines of code from a GitLab On-Premise Group or Project. Requires to pass the base URL of your GitLab instance, [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes. The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
+
+```
+<gitlab_onpremise.ps1> <baseURL> <token> <groupName> <PATH for cloc binary>
+.\gitlab_onpremise.ps1 https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName $HOME_CLOC/bin/cloc.exe
+```
+or
+```
+<gitlab_onpremise.ps1> <baseURL> <token> <groupName/MyProjectName> <PATH for cloc binary> 
+.\gitlab_onpremise.ps1 https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
+```
        
 ### [bitbucket.org](https://bitbucket.org):
 

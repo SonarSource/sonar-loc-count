@@ -92,6 +92,23 @@ If you have more than 100 repos , you need to change Value of parameter page=Num
 
        1 Page = 100 repos max
        Example for 150 repos :  GetAPI="/projects/$groupname1?per_page=100&page=2"
+
+### GitLab On-Premise:
+Counts lines of code from a GitLab On-Premise Group or Project. Requires to pass the base URL of your GitLab instance, [personal access token](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html) and the group.  The token must have read_api and read_repository scopes. The script generates a report per project(File : ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code.As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
+
+```
+<gitlab_onpremise.sh> <baseURL> <token> <groupName>
+gitlab_onpremise.sh https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName
+```
+or
+```
+<gitlab_onpremise.sh> <baseURL> <token> <groupName/MyProjectName> 
+gitlab_onpremise.sh https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName/MyProjectName
+```
+If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 58 or 61
+
+       1 Page = 100 repos max
+       Example for 150 repos :  GetAPI="/projects/$groupname1?per_page=100&page=2"
        
 ### Local Filesystem:
 Counts lines of code from a local directory or file. The script generates a report file : Report_***Name-of-Directory***.txt
