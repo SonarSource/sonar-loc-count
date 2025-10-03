@@ -105,6 +105,14 @@ or
 <gitlab_onpremise.sh> <baseURL> <token> <groupName/MyProjectName> 
 gitlab_onpremise.sh https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName/MyProjectName
 ```
+or to discover and process **ALL** accessible groups:
+```
+<gitlab_onpremise.sh> <baseURL> <token> ALL
+gitlab_onpremise.sh https://gitlab.example.com 1234567890abcdefgh ALL
+```
+
+**Group Discovery Feature**: Use `ALL` as the groupName parameter to automatically discover and process all groups accessible with your token. This is useful when your token has access to multiple groups and you want to analyze all of them in a single run.
+
 If you have more than 100 repos , you need to change Value of parameter page=Number_of_page on line 58 or 61
 
        1 Page = 100 repos max

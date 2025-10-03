@@ -24,8 +24,11 @@ $NBCLOC="cpt.txt"
 $cpt=0
 
 if ($args.Length -lt 4) {
-  Write-Output ('Usage: gitlab_onpremise.ps1 <baseURL> <token> <groupName> <PATH for cloc binary> optional <projects>')
+  Write-Output ('Usage: gitlab_onpremise.ps1 <baseURL> <token> <groupName|ALL> <PATH for cloc binary> optional <projects>')
   Write-Output ('Example: gitlab_onpremise.ps1 https://gitlab.example.com mytoken mygroup C:\tools\cloc.exe')
+  Write-Output ('         gitlab_onpremise.ps1 https://gitlab.example.com mytoken ALL C:\tools\cloc.exe')
+  Write-Output ('')
+  Write-Output ('Use "ALL" as groupName to discover and process all accessible groups')
 } 
 else {
 
@@ -40,162 +43,225 @@ else {
     $baseURL = $baseURL.TrimEnd('/')
     $BaseAPI = "${baseURL}/api/v4"
 
-    $StSubgroupName=$groupname | Select-String -Pattern '/'
-    if ($StSubgroupName.MAtches.Success -eq "True") { $Namespace=1 } else { $Namespace=0 }  
-   
-    # Test if request for for 1 Project or more Project in GroupName
-    if ($Namespace -eq 1 ) {
-            $groupname1=$groupname.replace("/","%2f")
-            $GetAPI="/projects/$groupname1"
+    # Function to fetch all accessible groups
+    function Fetch-AllGroups {
+        $page = 1
+        $per_page = 100
+        $allGroups = @()
+        
+        Write-Host "Discovering all accessible groups..."
+        
+        do {
+            try {
+                $base64AuthInfo = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($connectionToken)"))
+                $GroupUrl = "${BaseAPI}/groups?per_page=${per_page}&page=${page}"
+                $response = Invoke-RestMethod -Uri $GroupUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)}
+                
+                if ($response -and $response.Count -gt 0) {
+                    $allGroups += $response.path
+                    $page++
+                } else {
+                    break
+                }
+            } catch {
+                Write-Host "Error fetching groups: $($_.Exception.Message)"
+                break
+            }
+        } while ($response -and $response.Count -gt 0)
+        
+        return $allGroups
     }
 
-    else  {
-            $GetAPI="/groups/$groupname/projects?include_subgroups=true"
-  
-    }
+    # Function to process a single group
+    function Process-Group {
+        param($currentGroup)
+        
+        Write-Host "========================================================================="
+        Write-Host "Processing Group: $currentGroup"
+        Write-Host "========================================================================="
+        
+        $StSubgroupName = $currentGroup | Select-String -Pattern '/'
+        if ($StSubgroupName.MAtches.Success -eq "True") { $Namespace=1 } else { $Namespace=0 }  
+       
+        # Test if request for for 1 Project or more Project in GroupName
+        if ($Namespace -eq 1 ) {
+                $groupname1=$currentGroup.replace("/","%2f")
+                $GetAPI="/projects/$groupname1"
+        }
 
-
-    if(Test-Path $CLOCPATH) {
-
-      # Encode Authentification Token
-      $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($connectionToken)"))
-      # Set API URL to Get Repositories
-      $ProjectUrl="${BaseAPI}${GetAPI}"  
-     
-      # Get List of Repositories
-      $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
-      # Get Number of Repositories
-      $NumberRepositories=@($Repo).count
-
-      Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
+        else  {
+                $GetAPI="/groups/$currentGroup/projects?include_subgroups=true"
       
-      # Parse Repositories
-      #--------------------------------------------------------------------------------------#
-
-      for ($j=0; $j -lt $NumberRepositories;$j++) {
-       
-        # Get Repositorie Name and ID
-        if ( $NumberRepositories -eq 1) { 
-                $RepoName= $Repo.name
-                $IDrepo=$Repo.id
-                $Repourl=$Repo.http_url_to_repo
         }
-        else {
-                $RepoName= $Repo.name[$j]
-                $IDrepo=$Repo.id[$j]
-                $Repourl=$Repo.http_url_to_repo[$j]
-          
-        }
-        Write-Host "-----------------------------------------------------------------"
-        Write-Host "`n Repository Number :$j  Name : $RepoName id : $IDrepo`n"
-    
-        # Set API URL to Get Branches
-        $ProjetBranchUrl1="${BaseAPI}/projects/${IDrepo}/repository/branches" 
-  
-       # [uri]::EscapeDataString( $ProjetBranchUrl)
-        $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
-       
-        # Get List of Branches
-        try {
-         $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
-        } Catch {
-            if($_.ErrorDetails.Message) {
-              # Write-Host $_.ErrorDetails.Message
-            } else {
-              # Get Number of Branches
-               $NumberBranch=@($Branch).count
-            }
-         }
-        $NumberBranch=@($Branch).count
-     
-        # Parse Repositories/Branches 
-        #--------------------------------------------------------------------------------------#
 
-        for ($i = 0; $i -lt $NumberBranch; $i++) {
-          # Get Branche Name 
-          if($NumberBranch -ne 1) { 
-            $BrancheName=$Branch.name[$i]
-            }
-             else { $BrancheName=$Branch.name
-            }    
-        
-          # Clone Repository locally
-          Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
+        if(Test-Path $CLOCPATH) {
 
-          $Repourl=$Repourl.replace(" ","%20")
-        
-          # Create Command Git clone and replace space by %20
-          $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
-
-          if (Test-Path -Path $RepoName2) {
-             Remove-Item $RepoName2 -Recurse -Force
-          } else {}
-          
-          # Handle both HTTP and HTTPS URLs for on-premise GitLab
-          if ($Repourl -match "^https://") {
-              $cmdline0=" git clone '" + $Repourl + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
-          } elseif ($Repourl -match "^http://") {
-              $cmdline0=" git clone '" + $Repourl + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
-          } else {
-              Write-Host "Warning: Unsupported URL format: $Repourl"
-              continue
-          }
-          
-          Invoke-Expression -Command $cmdline0  
-
-          # Run Analyse : run cloc on the local repository
-          Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
-          $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${RepoName2}_${BrancheName}.cloc  --timeout 0 --sum-one"
-          $cmdline2=$CLOCPATH + " " + $cmdparms2
-          Invoke-Expression -Command $cmdline2
-
-          If ( -not (Test-Path -Path ${RepoName2}_${BrancheName}.cloc) )  {
-            "0 Files Analyse in ${RepoName2}/${BrancheName}" | Out-File ${RepoName2}_${BrancheName}.cloc
-          }
+          # Encode Authentification Token
+          $base64AuthInfo= [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes(":$($connectionToken)"))
+          # Set API URL to Get Repositories
+          $ProjectUrl="${BaseAPI}${GetAPI}"  
          
-       
-          # Generate report
-          "Result Analyse Counting ${RepoName2} / ${BrancheName}" | Out-File -Append "${RepoName2}.txt"
-          Get-content ${RepoName2}_${BrancheName}.cloc | Out-File -Append "${RepoName2}.txt"
-       
-        }
-         #--------------------------------------------------------------------------------------#
+          # Get List of Repositories
+          $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
+          # Get Number of Repositories
+          $NumberRepositories=@($Repo).count
 
-        Write-Host "`nBuilding final report for projet $RepoName : $RepoName.txt"
+          Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
+          
+          # Parse Repositories
+          #--------------------------------------------------------------------------------------#
 
-
-        Get-ChildItem -Path .\* -Include *.cloc |ForEach-Object { $NMCLOCB=Get-content $_.Name |Select-String "SUM:";$NMCLOCB-replace "\s{2,}" , " "| ForEach-Object{$NMCLOCB1=$_.ToString().split(" ");$CLOCBr+=@([PSCustomObject]@{ CLOC=$NMCLOCB1[4] ; BRANCH=${BrancheName}})};Remove-Item $_.Name -Recurse -Force} 
-        $CLOCBr | Select-Object | Sort-Object -Property CLOC -Descending -OutVariable Sorted | Out-Null
-
-        $clocmax=$($Sorted[0].CLOC -as [decimal]).ToString('N2')
-        $Branchmax=$Sorted[0].BRANCH
-
-        # Remove local repos
-        if (Test-Path -Path $RepoName2) {
-          Remove-Item $RepoName2 -Recurse -Force
-        } else {}
-       
-        # Reset object
-        $CLOCBr=@([PSCustomObject]@{ })
-      
+          for ($j=0; $j -lt $NumberRepositories;$j++) {
+           
+            # Get Repositorie Name and ID
+            if ( $NumberRepositories -eq 1) { 
+                    $RepoName= $Repo.name
+                    $IDrepo=$Repo.id
+                    $Repourl=$Repo.http_url_to_repo
+            }
+            else {
+                    $RepoName= $Repo.name[$j]
+                    $IDrepo=$Repo.id[$j]
+                    $Repourl=$Repo.http_url_to_repo[$j]
+              
+            }
+            Write-Host "-----------------------------------------------------------------"
+            Write-Host "`n Repository Number :$j  Name : $RepoName id : $IDrepo`n"
         
+            # Set API URL to Get Branches
+            $ProjetBranchUrl1="${BaseAPI}/projects/${IDrepo}/repository/branches" 
+      
+           # [uri]::EscapeDataString( $ProjetBranchUrl)
+            $ProjetBranchUrl= $ProjetBranchUrl1.replace(" ","%20")
+           
+            # Get List of Branches
+            try {
+             $Branch = (Invoke-RestMethod -Uri $ProjetBranchUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
+            } Catch {
+                if($_.ErrorDetails.Message) {
+                  # Write-Host $_.ErrorDetails.Message
+                } else {
+                  # Get Number of Branches
+                   $NumberBranch=@($Branch).count
+                }
+             }
+            $NumberBranch=@($Branch).count
+         
+            # Parse Repositories/Branches 
+            #--------------------------------------------------------------------------------------#
 
-        If($NumberBranch -eq 0) {$RepoName2=$RepoName}
-        Write-Host "-------------------------------------------------------------------------------------------------------"
-        Write-Host "`nThe maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"
-        Write-Host "-------------------------------------------------------------------------------------------------------"
-        "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
-        "The maximum lines of code in the ${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"| Out-File -Append "${RepoName2}.txt"
-        "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${RepoName2}.txt"
+            for ($i = 0; $i -lt $NumberBranch; $i++) {
+              # Get Branche Name 
+              if($NumberBranch -ne 1) { 
+                $BrancheName=$Branch.name[$i]
+                }
+                 else { $BrancheName=$Branch.name
+                }    
+            
+              # Clone Repository locally
+              Write-Host "`n      Branche Name : ${RepoName}/${BrancheName} `n"
 
-        $clocmax | Out-File -Append "$NBCLOC"
-      }  
-       #--------------------------------------------------------------------------------------#
+              $Repourl=$Repourl.replace(" ","%20")
+            
+              # Create Command Git clone and replace space by %20
+              $RepoName2=$RepoName.replace(" ","_").replace("/","_") 
 
-      # Generate Gobal report
-       #--------------------------------------------------------------------------------------#
+              if (Test-Path -Path $RepoName2) {
+                 Remove-Item $RepoName2 -Recurse -Force
+              } else {}
+              
+              # Handle both HTTP and HTTPS URLs for on-premise GitLab
+              if ($Repourl -match "^https://") {
+                  $cmdline0=" git clone '" + $Repourl + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
+              } elseif ($Repourl -match "^http://") {
+                  $cmdline0=" git clone '" + $Repourl + "' --depth 1 --branch '" + $BrancheName + "' " + $RepoName2
+              } else {
+                  Write-Host "Warning: Unsupported URL format: $Repourl"
+                  continue
+              }
+              
+              Invoke-Expression -Command $cmdline0  
 
-      if (Test-Path -Path $NBCLOC) {
+              # Run Analyse : run cloc on the local repository
+              Write-Host "Analyse Counting ${RepoName}/${BrancheName}"
+              $cmdparms2="${RepoName2} --force-lang-def=sonar-lang-defs.txt --report-file=${currentGroup}_${RepoName2}_${BrancheName}.cloc  --timeout 0 --sum-one"
+              $cmdline2=$CLOCPATH + " " + $cmdparms2
+              Invoke-Expression -Command $cmdline2
+
+              If ( -not (Test-Path -Path ${currentGroup}_${RepoName2}_${BrancheName}.cloc) )  {
+                "0 Files Analyse in ${currentGroup}_${RepoName2}/${BrancheName}" | Out-File ${currentGroup}_${RepoName2}_${BrancheName}.cloc
+              }
+             
+           
+              # Generate report
+              "Result Analyse Counting ${currentGroup}_${RepoName2} / ${BrancheName}" | Out-File -Append "${currentGroup}_${RepoName2}.txt"
+              Get-content ${currentGroup}_${RepoName2}_${BrancheName}.cloc | Out-File -Append "${currentGroup}_${RepoName2}.txt"
+           
+            }
+             #--------------------------------------------------------------------------------------#
+
+            Write-Host "`nBuilding final report for projet $RepoName : ${currentGroup}_$RepoName.txt"
+
+            Get-ChildItem -Path .\* -Include "${currentGroup}_*.cloc" |ForEach-Object { $NMCLOCB=Get-content $_.Name |Select-String "SUM:";$NMCLOCB-replace "\s{2,}" , " "| ForEach-Object{$NMCLOCB1=$_.ToString().split(" ");$CLOCBr+=@([PSCustomObject]@{ CLOC=$NMCLOCB1[4] ; BRANCH=${BrancheName}})};Remove-Item $_.Name -Recurse -Force} 
+            $CLOCBr | Select-Object | Sort-Object -Property CLOC -Descending -OutVariable Sorted | Out-Null
+
+            $clocmax=$($Sorted[0].CLOC -as [decimal]).ToString('N2')
+            $Branchmax=$Sorted[0].BRANCH
+
+            # Remove local repos
+            if (Test-Path -Path $RepoName2) {
+              Remove-Item $RepoName2 -Recurse -Force
+            } else {}
+           
+            # Reset object
+            $CLOCBr=@([PSCustomObject]@{ })
+          
+            
+
+            If($NumberBranch -eq 0) {$RepoName2=$RepoName}
+            Write-Host "-------------------------------------------------------------------------------------------------------"
+            Write-Host "`nThe maximum lines of code in the ${currentGroup}/${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"
+            Write-Host "-------------------------------------------------------------------------------------------------------"
+            "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${currentGroup}_${RepoName2}.txt"
+            "The maximum lines of code in the ${currentGroup}/${RepoName2} project is : < $clocmax > for the branch : $Branchmax `n"| Out-File -Append "${currentGroup}_${RepoName2}.txt"
+            "-------------------------------------------------------------------------------------------------------"| Out-File -Append "${currentGroup}_${RepoName2}.txt"
+
+            $clocmax | Out-File -Append "$NBCLOC"
+          }  
+           #--------------------------------------------------------------------------------------#
+
+        }    
+        else {
+                Write-Host "Error : PATH for cloc binary is wrong"
+        }
+    }
+
+    # Main execution logic
+    if ($groupname -eq "ALL") {
+        # Discover and process all groups
+        $groups = Fetch-AllGroups
+        
+        if (-not $groups -or $groups.Count -eq 0) {
+            Write-Host "No accessible groups found or error occurred during group discovery."
+            exit 1
+        }
+        
+        Write-Host "Found groups: $($groups -join ', ')"
+        Write-Host ""
+        
+        foreach ($group in $groups) {
+            Process-Group $group
+        }
+        
+    } else {
+        # Process single group
+        Process-Group $groupname
+    }
+
+    # Generate Global report
+    #--------------------------------------------------------------------------------------#
+
+    if (Test-Path -Path $NBCLOC) {
         foreach($line in Get-Content .\${NBCLOC}) {
           $cpt=$cpt + $line    
         }
@@ -212,11 +278,6 @@ else {
        "-------------------------------------------------------------------------------------------------------n" | Out-File -Append global.txt
        "`nThe maximum lines of code on the organization is : < $cpt >`n"| Out-File -Append global.txt
        "-------------------------------------------------------------------------------------------------------" | Out-File -Append global.txt
-      }
-      #--------------------------------------------------------------------------------------#
-
-    }    
-    else {
-            Write-Host "Error : PATH for cloc binary is wrong"
     }
+    #--------------------------------------------------------------------------------------#
 }

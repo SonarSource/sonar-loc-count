@@ -83,6 +83,13 @@ or
 <gitlab_onpremise.ps1> <baseURL> <token> <groupName/MyProjectName> <PATH for cloc binary> 
 .\gitlab_onpremise.ps1 https://gitlab.example.com 1234567890abcdefgh myGitLabGroupName/MyProjectName $HOME_CLOC/bin/cloc.exe
 ```
+or to discover and process **ALL** accessible groups:
+```
+<gitlab_onpremise.ps1> <baseURL> <token> ALL <PATH for cloc binary>
+.\gitlab_onpremise.ps1 https://gitlab.example.com 1234567890abcdefgh ALL $HOME_CLOC/bin/cloc.exe
+```
+
+**Group Discovery Feature**: Use `ALL` as the groupName parameter to automatically discover and process all groups accessible with your token. This is useful when your token has access to multiple groups and you want to analyze all of them in a single run.
        
 ### [bitbucket.org](https://bitbucket.org):
 
