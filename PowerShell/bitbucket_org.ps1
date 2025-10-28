@@ -28,7 +28,7 @@ $BaseAPI1="bitbucket.org"
 
 
 if ($args.Length -lt 4) {
-  Write-Output ('Usage: bitbucket_com.ps1  <user> <PasswordToken> <workspace> <clocPath> and optional <repoName>')
+  Write-Output ('Usage: bitbucket_com.ps1  <user> <apiToken> <workspace> <clocPath> and optional <repoName>')
 } 
 else {
 
@@ -77,7 +77,7 @@ else {
       $Repo = (Invoke-RestMethod -Uri $ProjectUrl -Method Get -UseDefaultCredential -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)})
       # Get Number of Repositories
       if ($args.Length -eq 5) { $NumberRepositories=@($Repo).count }
-      else { $NumberRepositories=$Repo.value.count }
+      else { $NumberRepositories=$Repo.values.count }
 
       Write-Host "`n Number of Repositories : ${NumberRepositories} `n"
 
