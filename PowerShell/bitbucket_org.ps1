@@ -28,8 +28,8 @@ $BaseAPI1="bitbucket.org"
 
 
 if ($args.Length -lt 4) {
-  Write-Output ('Usage: bitbucket_com.ps1  <user> <PasswordToken> <workspace> and optional <repoName>')
-}
+  Write-Output ('Usage: bitbucket_com.ps1  <user> <PasswordToken> <workspace> <clocPath> and optional <repoName>')
+} 
 else {
 
     # Set Variables token, organization and PATH for cloc binary
@@ -37,13 +37,14 @@ else {
     $users=$args[0]
     $connectionToken=$args[1]
     $wks=$args[2]
-    $CLOCPATH=$args[3]
-
+    
      # Test if request for for 1 Repo or more Repo
      if ($args.Length -eq 5) {
-      $Project=$args[4]
-      $GetAPI="repositories/$wks/$Project"
+      $Project=$args[3]
+      $CLOCPATH=$args[4]
+      $GetAPI="repositories/$wks/$Project"     
     } else {
+      $CLOCPATH=$args[3]
       $GetAPI="repositories/$wks"
     }
 
