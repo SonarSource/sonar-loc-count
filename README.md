@@ -45,10 +45,10 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName
 ```
 
 ### [bitbucket.org](https://bitbucket.org):
-Counts lines of code from a Bitbucket.org organization. Requires to pass username, [App token password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug. The token must have Repositories Read permissions. The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
+Counts lines of code from a Bitbucket.org organization. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, and the workspace slug. The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
 
 ```
-<bitbucket_org.sh> <user> <PasswordToken> <myWorkspace>
+<bitbucket_org.sh> <user> <apiToken> <myWorkspace>
 bitbucket_org.sh myuser 1234567890abcdefgh myBBWorkspace
 ```
 or

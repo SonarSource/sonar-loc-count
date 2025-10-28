@@ -72,15 +72,22 @@ or
        
 ### [bitbucket.org](https://bitbucket.org):
 
-Counts lines of code from a Bitbucket.org organization. Requires passing username, [App token password](https://support.atlassian.com/bitbucket-cloud/docs/app-passwords/) and the workspace slug. The token must have Repositories Read permissions. The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
+Counts lines of code from a Bitbucket.org workspace or individual repository. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, workspace slug, and path to cloc binary. The token must have Repositories Read permissions. 
 
+The script can operate at two levels:
+- **Workspace level**: Analyzes all repositories in the workspace
+- **Repository level**: Analyzes a single specified repository
+
+The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***global.txt*** file that indicates the maximum line of code on the repository.
+
+**Workspace level (all repositories):**
 ```
-<bitbucket_org.ps1> <user> <PasswordToken> <myWorkspace> <PATH for cloc binary>
-.\bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe
-```
-or
-```
-<bitbucket_org.ps1> <user> <PasswordToken> <myWorkspace>  <PATH for cloc binary>  <MyProjectName>
-.\bitbucket_org.ps1 myuser 1234567890abcdefgh myBBWorkspace $HOME_CLOC/bin/cloc.exe MyProjectName
+<bitbucket_org.ps1> <user> <apiToken> <workspace> <clocPath>
+.\bitbucket_org.ps1 myBitbucketemail@workplace.com 1234567890abcdefgh myBBWorkspace C:\path\to\cloc.exe
 ```
 
+**Repository level (single repository):**
+```
+<bitbucket_org.ps1> <user> <apiToken> <workspace> <repoName> <clocPath>
+.\bitbucket_org.ps1 myBitbucketemail@workplace.com 1234567890abcdefgh myBBWorkspace my-repo C:\path\to\cloc.exe
+```
