@@ -35,6 +35,16 @@ BaseAPI1="bitbucket.org"
 
 source ./set_common_variables.sh
 
+# Initialize the counter file
+> $NBCLOC
+
+# Use just the username part if user is an email address
+if [[ $user == *"@"* ]]; then
+    gituser=$(echo $user | cut -d'@' -f1)
+else
+    gituser=$user
+fi
+
 # Test if request for for 1 Repo or more Repo
 
 if [ -z ${4} ]; then 
@@ -60,7 +70,11 @@ do
     repoNextUrl=$(echo $GETREPOOUT | jq -r '.next')
     infoTotal=$(echo $GETREPOOUT | jq -r '.size')
     infoPage=$(echo $GETREPOOUT | jq -r '.page')
-    echo "Processing page $infoPage of $(($infoTotal/$pagelen))"
+    if [ "$infoTotal" != "null" ] && [ ! -z "$infoTotal" ]; then
+        echo "Processing page $infoPage of $(($infoTotal/$pagelen))"
+    else
+        echo "Processing page $infoPage"
+    fi
     echo $GETREPOOUT|jq -r ''"${jq_args}"''| while IFS=: read -r Name UUID;
     
     do
@@ -100,7 +114,8 @@ do
                 echo -e "\n       Branche Name : $BrancheNameF1\n"
     
                 # Create Commad Git clone 
-                git clone  https://$user:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
+                # Use gituser (just the username part without domain from email address) for git authentication
+                git clone  https://$gituser:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
     
                 # Run Analyse : run cloc on the local repository
                 if [ -s $EXCLUDE ]; then

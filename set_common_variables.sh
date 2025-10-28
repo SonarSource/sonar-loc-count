@@ -18,3 +18,4 @@ LIST=""
 NBCLOC="cpt.txt"
 cpt=0
 EXCLUDE=".clocignore"
+pagelen=100
