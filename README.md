@@ -38,10 +38,20 @@ Counts lines of code from a GitHub.com organization. Requires to pass username, 
 <github_com.sh> <user> <token> <organization>
 github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg
 ```
-or
+or (Single repository)
+
 ```
 <github_com.sh> <user> <token> <organization> <MyRepoName>
 github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName
+
+```
+
+or (Specific branches)
+
+```
+<github_com.sh> <user> <token> <organization> <MyRepoName> <branches>
+github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName master,develop,staging
+
 ```
 
 ### [bitbucket.org](https://bitbucket.org):

@@ -6,26 +6,33 @@
 #  @package     :                                                          #
 #  @subpackage  : github                                                   #
 #  @access      :                                                          #
-#  @paramtype   : user,token,org ,reponame                                 #
+#  @paramtype   : user,token,org,reponame,branches                         #
 #  @argument    :                                                          #
 #  @description : Get Number ligne of Code in GitHub DevOPS                #
-#  @usage : ./github_com.sh <token> <org> and optional <repoName>          #                                                              
+#  @usage :                                                                #
+#    ./github_com.sh <user> <token> <org>                                  #
+#    ./github_com.sh <user> <token> <org> optional <repoName>              #
+#    ./github_com.sh <user> <token> <org> optional <repoName> <branches>   #
 #                                                                          #
+#  @param branches : Comma-separated list (e.g., dev,staging,master)       #
+#                    If branches provided, repoName is REQUIRED            #
 #                                                                          #
-#                                                                          #
-#  @version 1.02                                                           #
+#  @version 1.03                                                           #
 #                                                                          #
 # Fix isssues                                                              #
 #  - If the repository is archived, it will not be analyzed.               #
 #  - Pagination issue when over 100 repositories                           #
 #  Thanks to @gabrielsoltz for solving these issues and creating a PR      #
+#  - Added support for comma-separated branch names as optional parameter  #
+#    Note: When branches are specified, repo name MUST be provided         #
 #                                                                          #
 #**************************************************************************#
 
 
 if [ $# -lt 3 ]; then
-    echo "Usage: `basename $0` <user> <token> <org> and optional <repoName>"
-    exit
+    echo "Usage: `basename $0` <user> <token> <org> [repoName] [branches]"
+    echo "Example: `basename $0` myUser myToken myOrg myRepo master,develop,staging"
+    exit 1
 fi
 
 # Set Variables user,token,org,BaseAPI
@@ -33,6 +40,8 @@ fi
 user=$1
 connectionToken=$2
 org=$3
+repoName=$4        # Optional
+branches=$5        # Optional: comma-separated list
 
 BaseAPI="https://api.github.com"
 
@@ -40,6 +49,11 @@ BaseAPI="https://api.github.com"
 
 source ./set_common_variables.sh
 
+# Check: If branches are provided, RepoName is required
+if [ ! -z "$branches" ] && [ -z "$repoName" ]; then
+    echo "Error: To specify branches, you must also specify the repository name."
+    exit 1
+fi
 
 # Test if request for 1 Repo or more Repo
 
@@ -73,6 +87,10 @@ echo "-----------------------------------------------------------------"
 echo "Total repositories: $count (including archived)"
 echo "-----------------------------------------------------------------"
 
+# Initialize temp file
+rm -f $NBCLOC
+touch $NBCLOC
+
 # Get List of Repositories : get Name , ID and http_url_to_repo
 for ((page=1; page<=pages; page++)); do
     curl -s -u $user:$connectionToken "$BaseAPI/$GetAPI?per_page=100&page=$page"|jq -r ''"${jq_args}"''| while IFS=: read -r Name ID Archived;
@@ -81,37 +99,51 @@ for ((page=1; page<=pages; page++)); do
             echo $Name
             echo "-----------------------------------------------------------------"
             echo -e "Repository Number :$i  Name : $Name id : $ID"
-            # Get List of Branches
-        
              # Replace space by - in Repository name for created local file
              NameFile=` echo $Name|$SED s/' '/'-'/g`
 
-             curl -s -u $connectionToken: $BaseAPI/repos/$org/$Name/branches | jq -r '.[].name' | while read -r BrancheName ;
+             # If specific branches are provided via CLI, echo them.
+             # If NOT provided, use the original API call
+             
+             if [ ! -z "$branches" ]; then
+                 # Convert comma-separated string to newline-separated list
+                 branch_list=$(echo "$branches" | tr ',' '\n')
+             else
+                 # Original Logic: Fetch branches from API (Limited to default page size)
+                 branch_list=$(curl -s -u $user:$connectionToken "$BaseAPI/repos/$org/$Name/branches" | jq -r '.[].name')
+             fi
+
+             echo "$branch_list" | while read -r BrancheName ;
              do
-                # Replace / or space by - in Branche Name for created local file
-                BrancheNameF=` echo $BrancheName|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
+                if [ ! -z "$BrancheName" ]; then
+                    # Replace / or space by - in Branche Name for created local file
+                    BrancheNameF=` echo $BrancheName|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g`
 
-                LISTF="${NameFile}_${BrancheNameF}.cloc"
-                echo -e "\n       Branche Name : $BrancheName\n"
+                    LISTF="${NameFile}_${BrancheNameF}.cloc"
+                    echo -e "\n       Branche Name : $BrancheName\n"
 
-                # Format Clone URL : cut <https://api.> string
-                BaseAPI1="${BaseAPI:12}"
+                    # Format Clone URL : cut <https://api.> string
+                    BaseAPI1="${BaseAPI:12}"
 
-                # Create Commad Git clone 
-                git clone https://oauth2:${connectionToken}@$BaseAPI1/$org/$Name --depth 1 --branch $BrancheName $NameFile
+                    # Create Commad Git clone 
+                    git clone https://oauth2:${connectionToken}@$BaseAPI1/$org/$Name --depth 1 --branch $BrancheName $NameFile
 
-                 # Run Analyse : run cloc on the local repository
-                 if [ -s $EXCLUDE ]; then
-                   cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one
-                 else
-                     cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
-                 fi    
-        
-                # Delete Directory projet
-                 /bin/rm -r $NameFile
-        
-                $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
-
+                    if [ -d "$NameFile" ]; then
+                        # Run Analyse : run cloc on the local repository
+                        if [ -s $EXCLUDE ]; then
+                        cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one
+                        else
+                            cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
+                        fi    
+                
+                        # Delete Directory projet
+                        /bin/rm -r $NameFile
+                
+                        $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
+                    else
+                        echo "       (Skipping: Branch '$BrancheName' not found in repo)"
+                    fi
+                fi
              done
 
              # Generate reports
@@ -157,12 +189,14 @@ for ((page=1; page<=pages; page++)); do
 done
 
 # Generate Gobal report
-while read line  
-do   
-   cpt=$(expr $cpt + $line)
-done < $NBCLOC
+if [ -f $NBCLOC ]; then
+    while read line  
+    do   
+       cpt=$(expr $cpt + $line)
+    done < $NBCLOC
 
-/bin/rm $NBCLOC
+    /bin/rm $NBCLOC
+fi
 
 echo -e "\n-------------------------------------------------------------------------------------------"
 printf "The maximum lines of code on the repository is : < %' .f > result in <Report_global.txt>\n" "${cpt}"
