@@ -1,0 +1,50 @@
+# SonarQube/SonarCloud scanner working directory
+.scannerwork/
+
+# Generated report files
+*.cloc
+*.txt
+!README.md
+!sonar-lang-defs.txt
+Report_global.txt
+cpt.txt
+
+# Temporary cloned repositories
+# (scripts clone repos into directories during analysis)
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# Editor files
+*.swp
+*.swo
+*.swn
+*~
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# Shell script artifacts
+*.sh.bak
+*.ps1.bak
+
+# Logs
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
