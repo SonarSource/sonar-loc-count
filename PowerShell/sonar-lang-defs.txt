@@ -4,6 +4,22 @@ ABAP
     extension ab4
     extension flow
     3rd_gen_scale 5.00
+Ansible
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension yml
+    extension yaml
+    filename playbook.yml
+    filename site.yml
+    3rd_gen_scale 2.00
+Bash
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension sh
+    extension bash
+    extension zsh
+    extension fish
+    3rd_gen_scale 3.81
 Apex
     filter rm_comments_in_strings " /* */
     filter rm_comments_in_strings " // 
@@ -11,6 +27,14 @@ Apex
     extension cls
     extension trigger
     3rd_gen_scale 1.50
+ARM Template
+    filter remove_matches ^\s*//
+    filter rm_comments_in_strings " /* */
+    filter call_regexp_common C
+    extension json
+    filename azuredeploy.json
+    filename mainTemplate.json
+    3rd_gen_scale 2.50
 C
     filter rm_comments_in_strings " /* */
     filter rm_comments_in_strings " // 
@@ -61,6 +85,21 @@ CSS
     filter call_regexp_common C
     extension css
     3rd_gen_scale 1.00
+Dart
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension dart
+    3rd_gen_scale 2.00
+    end_of_line_continuation \\$
+Dockerfile
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    filename Dockerfile
+    filename dockerfile
+    extension dockerfile
+    3rd_gen_scale 2.50
 Flex
     filter rm_comments_in_strings " /* */
     filter rm_comments_in_strings " // 
@@ -76,6 +115,12 @@ Go
     extension go
     3rd_gen_scale 2.50
     end_of_line_continuation \\$
+GitHub Actions
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension yml
+    extension yaml
+    3rd_gen_scale 0.90
 HTML
     filter remove_html_comments
     filter call_regexp_common HTML
@@ -91,6 +136,21 @@ HTML
     extension shtml
     extension cmp
     3rd_gen_scale 1.90
+Helm Chart
+    filter remove_matches ^\s*#
+    filter remove_inline #.*$
+    extension yml
+    extension yaml
+    filename values.yaml
+    filename Chart.yaml
+    3rd_gen_scale 2.00
+IBM JCL
+    filter remove_matches ^\s*\*
+    filter remove_matches ^//\*
+    extension jcl
+    extension jjob
+    extension job
+    3rd_gen_scale 1.50
 JSP
     filter remove_html_comments
     filter call_regexp_common HTML
@@ -200,6 +260,15 @@ Ruby
     filename rakefile
     script_exe ruby
     3rd_gen_scale 4.20
+    end_of_line_continuation \\$
+Rust
+    filter rm_comments_in_strings " /* */
+    filter rm_comments_in_strings " // 
+    filter call_regexp_common C++
+    filter remove_inline //.*$
+    extension rs
+    extension rlib
+    3rd_gen_scale 1.00
     end_of_line_continuation \\$
 SCSS
     filter rm_comments_in_strings " /* */
