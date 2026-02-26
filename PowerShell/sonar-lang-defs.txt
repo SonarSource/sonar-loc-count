@@ -7,10 +7,12 @@ ABAP
 Ansible
     filter remove_matches ^\s*#
     filter remove_inline #.*$
-    extension yml
-    extension yaml
     filename playbook.yml
+    filename playbook.yaml
     filename site.yml
+    filename site.yaml
+    filename ansible.yml
+    filename ansible.yaml
     3rd_gen_scale 2.00
 Bash
     filter remove_matches ^\s*#
@@ -118,8 +120,10 @@ Go
 GitHub Actions
     filter remove_matches ^\s*#
     filter remove_inline #.*$
-    extension yml
-    extension yaml
+    filename .github/workflows/.yml
+    filename .github/workflows/.yaml
+    filename workflow.yml
+    filename workflow.yaml
     3rd_gen_scale 0.90
 HTML
     filter remove_html_comments
@@ -139,10 +143,10 @@ HTML
 Helm Chart
     filter remove_matches ^\s*#
     filter remove_inline #.*$
-    extension yml
-    extension yaml
     filename values.yaml
     filename Chart.yaml
+    filename charts/.yaml
+    filename charts/.yml
     3rd_gen_scale 2.00
 IBM JCL
     filter remove_matches ^\s*\*
