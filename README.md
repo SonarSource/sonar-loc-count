@@ -1,5 +1,7 @@
 ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
+> [!WARNING]
+> This project is no longer maintained - use [GoLC](https://github.com/sonar-solutions/sonar-golc) if you are looking for a tool to count lines of code
 
 ## LoC Counting Scripts
 This is a collection of shell scripts that demonstrate how to count lines of code from repositories and/or local directories. These scripts can be used to **estimate** LoC counts that would be produced by a Sonar analysis of these projects, without having to implement this analysis.
@@ -112,4 +114,4 @@ Counts lines of code from a local directory or file. The script generates a repo
 
 Contributions and feedbacks
 -------------
-Contributions and feedbacks are welcome, as PRs or issues directly with this repository, or through your established Sonar communication channel.
+This repository is no longer maintained and does not accept new contributions. Please direct feedback and contributions to [GoLC](https://github.com/sonar-solutions/sonar-golc).
