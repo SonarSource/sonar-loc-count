@@ -114,4 +114,4 @@ Counts lines of code from a local directory or file. The script generates a repo
 
 Contributions and feedbacks
 -------------
-Contributions and feedbacks are welcome, as PRs or issues directly with this repository, or through your established Sonar communication channel.
+This repository is no longer maintained and does not accept new contributions. Please direct feedback and contributions to [GoLC](https://github.com/sonar-solutions/sonar-golc).
