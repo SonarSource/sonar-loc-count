@@ -55,7 +55,9 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName master,deve
 ```
 
 ### [bitbucket.org](https://bitbucket.org):
-Counts lines of code from a Bitbucket.org organization. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, and the workspace slug. The script generates a report per project (File: ***ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***Report_global.txt*** file that indicates the maximum line of code on the repository.
+Counts lines of code from a Bitbucket.org organization. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, and the workspace slug. The script generates a report per project (File: ***reports/ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***reports/Report_global.txt*** file that indicates the maximum line of code on the repository. Clones and intermediate files go in ***tmp/***, which is cleared at the start of each run.
+
+> **Note:** the API token is passed on the command line to `curl` and `git`, so other users on the same machine can see it in the process list (e.g. with `ps`) while the script runs. Avoid running it on shared machines.
 
 ```
 <bitbucket_org.sh> <user> <apiToken> <myWorkspace>
@@ -104,7 +106,7 @@ If you have more than 100 repos, you need to change Value of parameter page=Numb
        Example for 150 repos :  GetAPI="/projects/$groupname1?per_page=100&page=2"
        
 ### Local Filesystem:
-Counts lines of code from a local directory or file. The script generates a report file : Report_***Name-of-Directory***.txt
+Counts lines of code from a local directory or file. The script generates a report file : reports/Report_***Name-of-Directory***.txt
 
 ```
 <filesystem.sh> PathToDirectory

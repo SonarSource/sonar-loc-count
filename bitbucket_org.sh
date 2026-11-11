@@ -49,8 +49,9 @@ excl=()
 # Initialize the counter file
 > $NBCLOC
 
-# Git over HTTPS with an Atlassian API token uses a fixed username; send it as a header
-# so the token doesn't appear in the clone URL or process list
+# Git over HTTPS with an Atlassian API token uses a fixed username, sent here as a header.
+# Note: like the curl -u calls, this puts the (base64-encoded) token in the process's
+# arguments, so other users on the same machine can see it with ps.
 gitAuthHeader="Authorization: Basic $(printf 'x-bitbucket-api-token-auth:%s' "$connectionToken" | base64 | tr -d '\n')"
 
 # Test if request for for 1 Repo or more Repo
