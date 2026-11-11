@@ -53,9 +53,17 @@ excl=()
 # Initialize the counter file
 > $NBCLOC
 
-# Git over HTTPS with an Atlassian API token uses a fixed username, sent here as a header.
-# Note: like the curl -u calls, this puts the (base64-encoded) token in the process's
-# arguments, so other users on the same machine can see it with ps.
+# Credentials are passed via stdin (curl) and environment (git) rather than as
+# arguments, so they don't show up in the process list (ps).
+
+# Bitbucket API GET, with the user:token read from a curl config on stdin
+bb_api() {
+    local creds="$user:$connectionToken"
+    creds=${creds//\\/\\\\}; creds=${creds//\"/\\\"}   # escape \ and " for curl config syntax
+    curl -s -K - "$1" <<< "user = \"$creds\""
+}
+
+# Git over HTTPS with an Atlassian API token uses a fixed username, sent as a header
 gitAuthHeader="Authorization: Basic $(printf 'x-bitbucket-api-token-auth:%s' "$connectionToken" | base64 | tr -d '\n')"
 
 # Test if request for for 1 Repo or more Repo
@@ -79,7 +87,7 @@ do
 
     # Get List of Repositories : get Name , ID and http_url_to_repo
     echo "Next URL is: $repoNextUrl"
-    GETREPOOUT=$(curl -s -u $user:$connectionToken $repoNextUrl)
+    GETREPOOUT=$(bb_api "$repoNextUrl")
     repoNextUrl=$(echo $GETREPOOUT | jq -r '.next')
     infoTotal=$(echo $GETREPOOUT | jq -r '.size')
     infoPage=$(echo $GETREPOOUT | jq -r '.page')
@@ -103,7 +111,7 @@ do
         nextUrl="${BaseAPI}/repositories/$wks/$Name/refs/branches"
         while [ ! -z $nextUrl ]
         do
-            branchesJson=$(curl -s -u $user:$connectionToken $nextUrl)
+            branchesJson=$(bb_api "$nextUrl")
             
             if [ -z ${5} ]; then
                 nextUrl=$(echo $branchesJson | jq -r ".next")
@@ -128,7 +136,8 @@ do
                 echo -e "\n       Branche Name : $BrancheNameF1\n"
     
                 # Create Commad Git clone 
-                git -c http.extraHeader="$gitAuthHeader" clone https://$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 "$CloneDir"
+                GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=http.extraHeader GIT_CONFIG_VALUE_0="$gitAuthHeader" \
+                    git clone https://$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 "$CloneDir"
     
                 # Run Analyse : run cloc on the local repository
                 cloc "$CloneDir" --force-lang-def=sonar-lang-defs.txt --report-file="$LISTF" "${excl[@]}" --timeout 0 --sum-one
