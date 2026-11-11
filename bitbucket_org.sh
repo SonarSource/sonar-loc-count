@@ -35,15 +35,23 @@ BaseAPI1="bitbucket.org"
 
 source ./set_common_variables.sh
 
+# Clear the work dir so leftovers from an interrupted run don't get counted.
+/bin/rm -rf "$WORKDIR"
+mkdir -p "$WORKDIR" "$REPORTDIR"
+# Overrides the common NBCLOC (cpt.txt) to keep the counter out of the repo root
+NBCLOC="$WORKDIR/cpt.txt"
+GLOBALREPORT="$REPORTDIR/Report_global.txt"
+
+# cloc exclusions, read once rather than per branch
+excl=()
+[ -s "$EXCLUDE" ] && excl=(--exclude-dir="$(tr '\n' ',' < "$EXCLUDE")")
+
 # Initialize the counter file
 > $NBCLOC
 
-# Use just the username part if user is an email address
-if [[ $user == *"@"* ]]; then
-    gituser=$(echo $user | cut -d'@' -f1)
-else
-    gituser=$user
-fi
+# Git over HTTPS with an Atlassian API token uses a fixed username; send it as a header
+# so the token doesn't appear in the clone URL or process list
+gitAuthHeader="Authorization: Basic $(printf 'x-bitbucket-api-token-auth:%s' "$connectionToken" | base64 | tr -d '\n')"
 
 # Test if request for for 1 Repo or more Repo
 
@@ -109,23 +117,19 @@ do
                 # Replace / by - in Branche Name for created local file
                 BrancheNameF=$(echo $BrancheNameF1|$SED s/'\/'/'-'/g|$SED s/' '/'-'/g)
     
-                LISTF="${NameFile}_${BrancheNameF}.cloc"
+                LISTF="$WORKDIR/${NameFile}_${BrancheNameF}.cloc"
+                CloneDir="$WORKDIR/$NameFile"
                 
                 echo -e "\n       Branche Name : $BrancheNameF1\n"
     
                 # Create Commad Git clone 
-                # Use gituser (just the username part without domain from email address) for git authentication
-                git clone  https://$gituser:${connectionToken}@$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 $NameFile
+                git -c http.extraHeader="$gitAuthHeader" clone https://$BaseAPI1/$wks/$name1 --depth 1 --branch $BrancheNameF1 "$CloneDir"
     
                 # Run Analyse : run cloc on the local repository
-                if [ -s $EXCLUDE ]; then
-                  cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --exclude-dir=$(tr '\n' ',' < .clocignore) --timeout 0 --sum-one
-                else
-                   cloc $NameFile --force-lang-def=sonar-lang-defs.txt --report-file=${LISTF} --timeout 0 --sum-one
-                fi   
+                cloc "$CloneDir" --force-lang-def=sonar-lang-defs.txt --report-file="$LISTF" "${excl[@]}" --timeout 0 --sum-one
             
                 # Delete Directory projet
-                /bin/rm -r $NameFile
+                /bin/rm -rf "$CloneDir"
                
                 $SED -i "1i\Report for project ${Name} / ${BrancheName}\n" $LISTF
     
@@ -136,13 +140,24 @@ do
         done
          # Generate reports
     
-            echo -e "\nBuilding final report for projet $NameFile : $NameFile.txt"
+            REPORT="$REPORTDIR/$NameFile.txt"
+            echo -e "\nBuilding final report for projet $NameFile : $REPORT"
             echo "-----------------------------------------------------------------------------------------------------------------------" 
     
             # BRTAB2 : array with branche Name , The index is number max of cloc 
             # NBTAB1 : array with number max of cloc by branche
       
-            ([ `printf *.cloc` != '*.cloc' ] || [ -f '*.txt' ]) &&  for j in `ls -la *.cloc|awk '{print $9}'`; do  CMD1=`cat $j |grep SUM:|awk '{print $5}'`;BRTAB2["$CMD1"]=${j%?????};NBTAB1+="$CMD1 ";cat $j >>  $NameFile.txt;done && /bin/rm *.cloc || echo ""
+            # Start each repo's report fresh rather than appending to the previous run's
+            > "$REPORT"
+            for j in "$WORKDIR"/*.cloc; do
+                [ -e "$j" ] || continue
+                CMD1=$(grep SUM: "$j" | awk '{print $5}')
+                b=${j##*/}
+                BRTAB2["$CMD1"]=${b%.cloc}
+                NBTAB1+="$CMD1 "
+                cat "$j" >> "$REPORT"
+            done
+            /bin/rm -f "$WORKDIR"/*.cloc
     
             # Find 
             IFS=' ' NBRCLOC=( $NBTAB1 )
@@ -161,9 +176,11 @@ do
             fi      
     
             printf "The maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}"
-            echo -e "\n---------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt
-            printf "\nThe maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}" >> $NameFile.txt
-            echo -e "-----------------------------------------------------------------------------------------------------------------------" >> $NameFile.txt 
+            {
+                echo -e "\n---------------------------------------------------------------------------------------------------------------------"
+                printf "\nThe maximum lines of code in the < %s > project is : < %' .f > for the branch : < %s >\n" "${NameFile}" "${MESSAGE01}" "${MESSAGE02}"
+                echo -e "-----------------------------------------------------------------------------------------------------------------------"
+            } >> "$REPORT"
     
             # set Nbr Loc by Project in File cpt.txt
             echo "${INDEX01}" >> $NBCLOC
@@ -185,9 +202,11 @@ done < $NBCLOC
 /bin/rm $NBCLOC
 
 echo -e "\n-------------------------------------------------------------------------------------------"
-printf "The maximum lines of code on the repository is : < %' .f > result in <Report_global.txt>\n" "${cpt}"
+printf "The maximum lines of code on the repository is : < %' .f > result in <%s>\n" "${cpt}" "$GLOBALREPORT"
 echo -e "\n-------------------------------------------------------------------------------------------"
 
-echo -e "-------------------------------------------------------------------------------------------\n" > Report_global.txt
-printf "The maximum lines of code on the repository is : < %' .f > result in <Report_global.txt>\n" "${cpt}" >> Report_global.txt
-echo -e "---------------------------------------------------------------------------------------------" >> Report_global.txt   
+{
+    echo -e "-------------------------------------------------------------------------------------------\n"
+    printf "The maximum lines of code on the repository is : < %' .f > result in <%s>\n" "${cpt}" "$GLOBALREPORT"
+    echo -e "---------------------------------------------------------------------------------------------"
+} > "$GLOBALREPORT"
