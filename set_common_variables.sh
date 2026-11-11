@@ -21,6 +21,5 @@ LIST=""
 NBCLOC="cpt.txt"
 cpt=0
 EXCLUDE=".clocignore"
-WORKDIR="tmp"         # gitignored scratch dir for clones and per-branch .cloc files
 REPORTDIR="reports"   # gitignored dir for per-repo and global reports
 pagelen=100

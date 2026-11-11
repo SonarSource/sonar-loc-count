@@ -55,7 +55,7 @@ github_com.sh myuser 1234567890abcdefgh myGitHubDotComOrg MyRepoName master,deve
 ```
 
 ### [bitbucket.org](https://bitbucket.org):
-Counts lines of code from a Bitbucket.org organization. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, and the workspace slug. The script generates a report per project (File: ***reports/ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***reports/Report_global.txt*** file that indicates the maximum line of code on the repository. Clones and intermediate files go in ***tmp/***, which is cleared at the start of each run.
+Counts lines of code from a Bitbucket.org organization. Requires passing username (e.g. email), [API token](https://support.atlassian.com/bitbucket-cloud/docs/api-tokens/) with `read:repository:bitbucket` scope, and the workspace slug. The script generates a report per project (File: ***reports/ProjectName.txt***) that indicates the number of lines of code per branch and indicates the branch that has the highest number of lines of code. As well as a ***reports/Report_global.txt*** file that indicates the maximum line of code on the repository. Clones and intermediate files go in a private temporary directory (under `$TMPDIR`, or `/tmp` if unset) that is removed when the script exits; set `TMPDIR` to use a location with more space for large repositories.
 
 > **Note:** the API token is passed on the command line to `curl` and `git`, so other users on the same machine can see it in the process list (e.g. with `ps`) while the script runs. Avoid running it on shared machines.
 

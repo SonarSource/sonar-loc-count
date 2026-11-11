@@ -35,9 +35,13 @@ BaseAPI1="bitbucket.org"
 
 source ./set_common_variables.sh
 
-# Clear the work dir so leftovers from an interrupted run don't get counted.
-/bin/rm -rf "$WORKDIR"
-mkdir -p "$WORKDIR" "$REPORTDIR"
+# Private per-run work dir for clones, per-branch .cloc files and the counter.
+# Unique per run (so concurrent runs don't collide), only readable by this user,
+# and removed however the script exits. Set TMPDIR to put it somewhere with more space.
+WORKDIR=$(mktemp -d "${TMPDIR:-/tmp}/sonar-loc-count.XXXXXX") || exit 1
+trap '/bin/rm -rf "$WORKDIR"' EXIT
+trap 'exit 130' INT TERM
+mkdir -p "$REPORTDIR"
 # Overrides the common NBCLOC (cpt.txt) to keep the counter out of the repo root
 NBCLOC="$WORKDIR/cpt.txt"
 GLOBALREPORT="$REPORTDIR/Report_global.txt"
